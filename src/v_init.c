@@ -43,6 +43,10 @@ static SDL_GLContext glcontext;
 static int screen_w;
 static int screen_h;
 
+void v_pre_render() {
+     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+}
+
 void v_post_render() {
      SDL_GL_SwapWindow(screen);
 }

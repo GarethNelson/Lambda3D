@@ -34,6 +34,7 @@
 SDL_Window *screen;
 
 int v_init();
+void v_pre_render();
 void v_post_render();
 
 #endif
