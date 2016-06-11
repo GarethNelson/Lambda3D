@@ -1,0 +1,7 @@
+Basic skeleton SDL2/OpenGL
+App flow (FSM)
+Console system
+Cache layer
+Loading screen
+def format loader
+
