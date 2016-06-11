@@ -28,6 +28,11 @@
 
 #ifndef __V_INIT_H_
 #define __V_INIT_H_
+
+#include <SDL.h>
+
+SDL_Window *screen;
+
 int v_init();
 void v_post_render();
 

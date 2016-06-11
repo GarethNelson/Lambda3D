@@ -22,17 +22,31 @@
 // $Log:$
 //
 // DESCRIPTION:
-//     Console functionality
+//     misc utils
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __L_CONSOLE_H_
-#define __L_CONSOLE_H_
+#ifndef __L_UTILS_H_
+#define __L_UTILS_H_
 
-int console_is_active();
-void console_toggle();
-void console_init();
-void console_render();
-void console_printf(const char* fmt, ...);
+#if defined(__APPLE__)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
+
+#include <SDL.h>
+#include <SDL_ttf.h>
+
+typedef struct screen_res {
+    int w;
+    int h;
+} screen_res;
+
+screen_res get_screen_res();
+int power_of_two(int input);
+GLuint SDL_GL_LoadTexture(SDL_Surface *surface);
 
 #endif

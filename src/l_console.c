@@ -26,13 +26,38 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __L_CONSOLE_H_
-#define __L_CONSOLE_H_
+#include <stdlib.h>
+#include <stdio.h>
 
-int console_is_active();
-void console_toggle();
-void console_init();
-void console_render();
-void console_printf(const char* fmt, ...);
+#include <SDL.h>
+#include <SDL_ttf.h>
 
-#endif
+#include "l_utils.h"
+#include "v_init.h"
+
+static char CONSOLE_BUF[8192]; // 8kb should be enough for anybody
+
+// I am aware the below seems completely pointless, there is reason to the madness
+static int is_active=1;
+int console_is_active() {
+    if(is_active==1) return 1;
+    return 0;
+}
+
+void console_toggle() {
+     if(is_active==1) is_active=0;
+     if(is_active==0) is_active=1;
+}
+
+void console_init() {
+     if(!TTF_WasInit()) {
+         TTF_Init();
+     }
+}
+
+void console_render() {
+}
+
+void console_printf(const char* fmt, ...) {
+}
+

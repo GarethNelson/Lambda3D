@@ -38,7 +38,7 @@
 #include <GL/glu.h>
 #endif
 
-static SDL_Window *screen;
+SDL_Window *screen;
 static SDL_GLContext glcontext;
 static int screen_w;
 static int screen_h;

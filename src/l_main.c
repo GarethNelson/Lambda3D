@@ -37,7 +37,6 @@
 
 int running=1;
 
-
 void handle_events() {
      SDL_Event e;
      while (SDL_PollEvent(&e)) {
@@ -59,10 +58,21 @@ int main(int argc, char* argv[]) {
     SDL_InitSubSystem(SDL_INIT_EVENTS);
  
     v_init();
+    console_init();
+    console_toggle();
 
     while(running) {
        handle_events();
+
+       // update current app stage here
+
+       v_pre_render();
+
+       // render current app stage here
+
+       if(console_is_active()) console_render();
+
        v_post_render();
     }
-
+    return 0;
 }
