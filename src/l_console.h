@@ -22,47 +22,6 @@
 // $Log:$
 //
 // DESCRIPTION:
-//      Program entry point
+//
 //
 //-----------------------------------------------------------------------------
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-#include <SDL.h>
-
-#include "v_init.h"
-#include "l_console.h"
-
-int running=1;
-
-
-void handle_events() {
-     SDL_Event e;
-     while (SDL_PollEvent(&e)) {
-            switch(e.type) {
-               case SDL_QUIT:
-                 running = 0;
-               break;
-            }
-     }
-}
-
-int main(int argc, char* argv[]) {
-    setbuf(stdout,NULL);
-    printf("\n*** LAMBDA ENGINE STARTUP ***\n\n");
-
-    if(SDL_WasInit(0)==0) {
-       SDL_Init(0);
-    }
-    SDL_InitSubSystem(SDL_INIT_EVENTS);
- 
-    v_init();
-
-    while(running) {
-       handle_events();
-       v_post_render();
-    }
-
-}

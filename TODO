@@ -1,4 +1,4 @@
-Basic skeleton SDL2/OpenGL
+* Basic skeleton SDL2/OpenGL
 Console system
 App flow (FSM)
 Cache layer

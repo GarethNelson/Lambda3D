@@ -40,8 +40,12 @@
 
 static SDL_Window *screen;
 static SDL_GLContext glcontext;
-static unsigned int screen_w;
-static unsigned int screen_h;
+static int screen_w;
+static int screen_h;
+
+void v_post_render() {
+     SDL_GL_SwapWindow(screen);
+}
 
 int v_init() {
     if(SDL_WasInit(0)==0) {

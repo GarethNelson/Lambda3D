@@ -29,5 +29,6 @@
 #ifndef __V_INIT_H_
 #define __V_INIT_H_
 int v_init();
+void v_post_render();
 
 #endif
