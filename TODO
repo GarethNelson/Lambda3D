@@ -1,6 +1,6 @@
 Basic skeleton SDL2/OpenGL
-App flow (FSM)
 Console system
+App flow (FSM)
 Cache layer
 Loading screen
 def format loader
