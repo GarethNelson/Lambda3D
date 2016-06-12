@@ -229,17 +229,6 @@ OGLCONSOLE_Console OGLCONSOLE_Create()
 
 
 
-    /* Temporary shit */
-    OGLCONSOLE_Output((void*)console, "Console initialized\n");
-
-    OGLCONSOLE_Output((void*)console,
-            "Console display lines: %i\n", console->textHeight);
-
-    OGLCONSOLE_Output((void*)console,
-            "Console display columns: %i\n", console->textWidth);
-
-    OGLCONSOLE_Output((void*)console,
-            "Console input length: %i\n", MAX_INPUT_LENGTH);
 
 
     /* Return the opaque pointer to the programmer */

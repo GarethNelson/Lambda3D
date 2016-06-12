@@ -58,12 +58,21 @@ void console_printf(const char* fmt, ...) {
      vsnprintf(buf,1024,fmt,args);
      va_end(args);
      OGLCONSOLE_Print(buf);
+     fprintf(stderr,"%s",buf);
+}
+
+void console_runcmd(char* cmdline) {
+}
+
+void cmdCB(OGLCONSOLE_Console console, char *cmd) {
+     console_runcmd(cmd);
 }
 
 void console_init() {
      screen_res res = get_screen_res();
      glViewport( 0, 0, ( GLsizei )res.w, ( GLsizei )res.h );
      OGLCONSOLE_Create();
+     OGLCONSOLE_EnterKey(cmdCB);
      console_printf("Lambda console ready\n");
 }
 

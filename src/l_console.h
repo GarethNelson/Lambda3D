@@ -33,6 +33,7 @@ int console_is_active();
 void console_toggle();
 void console_init();
 void console_render();
+void console_runcmd(char* cmd);
 void console_printf(const char* fmt, ...);
 
 #endif
