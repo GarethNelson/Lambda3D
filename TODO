@@ -1,7 +1,16 @@
+Key:
+ * done
+ ! in progress
+
 * Basic skeleton SDL2/OpenGL
-Console system
-App flow (FSM)
-Cache layer
-Loading screen
-def format loader
+! Console system
+  App flow (FSM)
+  VFS
+  Cache layer
+  Loading screen
+  Def format loader
+  Test level
+  Menu system
+  Lua binding
+  Entity behaviours
 

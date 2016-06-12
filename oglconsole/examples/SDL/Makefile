@@ -1,5 +1,5 @@
 example : example.c ../../oglconsole-sdl.o ../../oglconsole.h
-	cc -I../../ -DOGLCONSOLE_USE_SDL `sdl-config --cflags --libs` -o $@ example.c ../../oglconsole-sdl.o
+	cc -framework OpenGL -I../../ -DOGLCONSOLE_USE_SDL `sdl-config --cflags --libs` -o $@ example.c ../../oglconsole-sdl.o
 
 ../../oglconsole-sdl.o : ../../oglconsole.c ../../oglconsole.h ../../ConsoleFont.c
 	make -C ../../
