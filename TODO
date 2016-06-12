@@ -4,6 +4,9 @@ Key:
 
 * Basic skeleton SDL2/OpenGL
 ! Console system
+*  Basic rendering
+!  CVars
+   Dynamically add commands
   Message passing bus
   App flow (FSM)
   VFS
