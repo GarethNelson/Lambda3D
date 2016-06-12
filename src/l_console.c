@@ -28,6 +28,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -36,7 +37,8 @@
 #include "v_init.h"
 
 #define CONSOLE_FONT_SIZE 12
-static char CONSOLE_BUF[8192]; // 8kb should be enough for anybody
+#define CONSOLE_BUF_SIZE 8192
+static char CONSOLE_BUF[CONSOLE_BUF_SIZE];
 static TTF_Font *font;
 
 // I am aware the below seems completely pointless, there is reason to the madness
@@ -51,11 +53,21 @@ void console_toggle() {
      if(is_active==0) is_active=1;
 }
 
+void console_printf(const char* fmt, ...) {
+     char buf[CONSOLE_BUF_SIZE];
+     va_list args;
+     va_start(args, fmt);
+     vsnprintf(buf,CONSOLE_BUF_SIZE,fmt,args);
+     va_end(args);
+     snprintf(CONSOLE_BUF,CONSOLE_BUF_SIZE,"%s%s",CONSOLE_BUF,buf);
+}
+
 void console_init() {
      if(!TTF_WasInit()) {
          TTF_Init();
      }
      font = TTF_OpenFont("../fonts/system.ttf",CONSOLE_FONT_SIZE);
+     console_printf("Lambda console ready\n");
 }
 
 void console_render() {
@@ -65,7 +77,8 @@ void console_render() {
 
      screen_res res=get_screen_res();
 
-     int max_lines = res.h/2/CONSOLE_FONT_SIZE;
+     int max_lines = res.h/2/TTF_FontHeight(font);
+     console_printf("max_lines: %d\n",max_lines);
      glOrtho( 0.0, res.w, res.h, 0.0, 1.0, -1.0 );
 
      glEnable(GL_BLEND);
@@ -86,7 +99,7 @@ void console_render() {
      SDL_Color font_bg = { 0xFF, 0xFF, 0xFF, 0 };
      SDL_Color font_fg = { 0x00, 0x00, 0x00, 0 };
 
-     sdl_output = TTF_RenderText_Blended_Wrapped(font,"Lambda 3D console\ntest",font_fg,1920);
+     sdl_output = TTF_RenderText_Blended_Wrapped(font,CONSOLE_BUF,font_fg,res.w);
      GLuint tex_out = SDL_GL_LoadTexture(sdl_output);
      glEnable(GL_TEXTURE_2D);
      glEnable(GL_BLEND);
@@ -103,6 +116,5 @@ void console_render() {
      SDL_FreeSurface(sdl_output);
 }
 
-void console_printf(const char* fmt, ...) {
-}
+
 

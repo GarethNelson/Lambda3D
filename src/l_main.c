@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     v_init();
     console_init();
     console_toggle();
-
+    int n;
     while(running) {
        handle_events();
 
@@ -69,6 +69,8 @@ int main(int argc, char* argv[]) {
        v_pre_render();
 
        // render current app stage here
+       n++;
+       console_printf("%d\n",n);
 
        if(console_is_active()) console_render();
 
