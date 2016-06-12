@@ -4,9 +4,11 @@ Key:
 
 * Basic skeleton SDL2/OpenGL
 ! Console system
+  Message passing bus
   App flow (FSM)
   VFS
   Cache layer
+  Splash / logo
   Loading screen
   Def format loader
   Test level
