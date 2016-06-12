@@ -29,6 +29,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
+#include <wordexp.h>
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -61,7 +63,30 @@ void console_printf(const char* fmt, ...) {
      fprintf(stderr,"%s",buf);
 }
 
+void console_defcmd(int argc, char** argv) {
+     int i;
+     for(i=0; i < argc; i++) {
+         console_printf("%s\n",argv[i]);
+     }
+}
+
 void console_runcmd(char* cmdline) {
+     int i;
+     char **argv = NULL;
+     int argc;
+     wordexp_t p;
+     wordexp(cmdline, &p, 0);
+     argc = p.we_wordc;
+     argv = calloc(argc, sizeof(char*));
+     for(i=0; i < p.we_wordc; i++) {
+         argv[i] = strdup(p.we_wordv[i]);
+     }
+     wordfree(&p);
+     console_defcmd(argc, argv);
+     for(i=0; i < p.we_wordc; i++) {
+         free(argv[i]);
+     }
+     free(argv);
 }
 
 void cmdCB(OGLCONSOLE_Console console, char *cmd) {
