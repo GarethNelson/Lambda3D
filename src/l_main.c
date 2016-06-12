@@ -34,13 +34,14 @@
 
 #include "v_init.h"
 #include "l_console.h"
+#include "oglconsole.h"
 
 int running=1;
 
 void handle_events() {
      SDL_Event e;
      while (SDL_PollEvent(&e)) {
-            switch(e.type) {
+            if (OGLCONSOLE_SDLEvent(&e) == 0) switch(e.type) {
                case SDL_QUIT:
                  running = 0;
                break;
@@ -60,7 +61,6 @@ int main(int argc, char* argv[]) {
     v_init();
     console_init();
     console_toggle();
-    int n;
     while(running) {
        handle_events();
 
@@ -69,10 +69,8 @@ int main(int argc, char* argv[]) {
        v_pre_render();
 
        // render current app stage here
-       n++;
-       console_printf("%d\n",n);
 
-       if(console_is_active()) console_render();
+       console_render();
 
        v_post_render();
     }

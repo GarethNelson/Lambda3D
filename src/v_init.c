@@ -69,7 +69,7 @@ int v_init() {
     SDL_GetDesktopDisplayMode(0, &disp_mode);
     
     screen = SDL_CreateWindow("Lambda 3D",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,disp_mode.w,disp_mode.h,
-                                              SDL_WINDOW_OPENGL);
+                                              SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
     SDL_GL_GetDrawableSize(screen, &screen_w, &screen_h);
 
     glcontext = SDL_GL_CreateContext(screen);

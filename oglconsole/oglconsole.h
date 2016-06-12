@@ -3,6 +3,8 @@
 #ifndef _OGLCONSOLE_H
 #define _OGLCONSOLE_H
 
+#define OGLCONSOLE_USE_SDL
+
 #ifdef __cplusplus
 extern "C" {
 #endif

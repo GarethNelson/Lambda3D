@@ -338,6 +338,31 @@ void OGLCONSOLE_Render(OGLCONSOLE_Console console)
     /* Don't render hidden console */
     if (C->visibility == 0) return;
 
+    // TODO - move this to a seperate function, invoke only on window resize
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    C->textWidth = viewport[2] / CHAR_PIXEL_W;
+    C->textHeight = viewport[3] / CHAR_PIXEL_H;
+    C->characterWidth = 1.0 / C->textWidth;
+    C->characterHeight = 1.0 / C->textHeight;
+    C->lines = (char*)realloc((void*)C->lines,C->maxLines*(C->textWidth+1));
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glOrtho(0, C->textWidth, 0, C->textHeight, -1, 1);
+    glGetDoublev(GL_MODELVIEW_MATRIX, C->pMatrix);
+    glPopMatrix();
+
+    /* Initialize its modelview matrix */
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslated(-1, -1, 0);
+    glScaled(2,2,1);
+    glGetDoublev(GL_MODELVIEW_MATRIX, C->mvMatrix);
+    glPopMatrix();
+
+
+
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadMatrixd(C->pMatrix);
@@ -721,7 +746,7 @@ int OGLCONSOLE_SDLEvent(SDL_Event *e)
         {  
             // TODO: Fetch values from OS?
             // TODO: Expose them to the program
-            SDL_EnableKeyRepeat(250, 30);
+//            SDL_EnableKeyRepeat(250, 30);
             userConsole->visibility += SLIDE_STEPS;
             return 1;
         }
@@ -742,7 +767,7 @@ int OGLCONSOLE_SDLEvent(SDL_Event *e)
             userConsole->visibility -= SLIDE_STEPS;
 
             /* Disable key repeat */
-            SDL_EnableKeyRepeat(0, 0);
+//            SDL_EnableKeyRepeat(0, 0);
             return 1;
         }
         
