@@ -64,9 +64,10 @@ void console_printf(const char* fmt, ...) {
 }
 
 void console_defcmd(int argc, char** argv) {
-     int i;
-     for(i=0; i < argc; i++) {
-         console_printf("%s\n",argv[i]);
+     if(strcmp(argv[0],"quit")==0) {
+        SDL_Event e;
+        e.type = SDL_QUIT;
+        SDL_PushEvent(&e);
      }
 }
 
@@ -98,7 +99,7 @@ void console_init() {
      glViewport( 0, 0, ( GLsizei )res.w, ( GLsizei )res.h );
      OGLCONSOLE_Create();
      OGLCONSOLE_EnterKey(cmdCB);
-     console_printf("Lambda console ready\n");
+     console_printf("Lambda console ready\n\n");
 }
 
 void console_render() {
