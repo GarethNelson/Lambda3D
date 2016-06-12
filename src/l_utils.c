@@ -67,8 +67,10 @@ GLuint SDL_GL_LoadTexture(SDL_Surface *surface)
     SDL_BlendMode saved_mode;
 
     /* Use the surface width and height expanded to powers of 2 */
-    w = power_of_two(surface->w);
-    h = power_of_two(surface->h);
+ //   w = power_of_two(surface->w);
+ //   h = power_of_two(surface->h);
+    w = surface->w;
+    h = surface->h;
     texcoord[0] = 0.0f;         /* Min X */
     texcoord[1] = 0.0f;         /* Min Y */
     texcoord[2] = (GLfloat)surface->w / w;  /* Max X */

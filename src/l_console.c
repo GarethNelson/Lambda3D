@@ -35,7 +35,9 @@
 #include "l_utils.h"
 #include "v_init.h"
 
+#define CONSOLE_FONT_SIZE 12
 static char CONSOLE_BUF[8192]; // 8kb should be enough for anybody
+static TTF_Font *font;
 
 // I am aware the below seems completely pointless, there is reason to the madness
 static int is_active=1;
@@ -53,9 +55,52 @@ void console_init() {
      if(!TTF_WasInit()) {
          TTF_Init();
      }
+     font = TTF_OpenFont("../fonts/system.ttf",CONSOLE_FONT_SIZE);
 }
 
 void console_render() {
+     glMatrixMode(GL_PROJECTION);
+     glPushMatrix();
+     glLoadIdentity();
+
+     screen_res res=get_screen_res();
+
+     int max_lines = res.h/2/CONSOLE_FONT_SIZE;
+     glOrtho( 0.0, res.w, res.h, 0.0, 1.0, -1.0 );
+
+     glEnable(GL_BLEND);
+     glDisable(GL_TEXTURE_2D);
+     glEnable(GL_BLEND);
+     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+     glColor4f(1.0f,1.0f,1.0f,1.0f);
+     glBegin(GL_QUADS);
+       glVertex2f(0,0);
+       glVertex2f(res.w,0);
+       glVertex2f(res.w,res.h/2);
+       glVertex2f(0,res.h/2);
+     glEnd();
+     
+     SDL_Surface *sdl_output;
+     SDL_Color font_bg = { 0xFF, 0xFF, 0xFF, 0 };
+     SDL_Color font_fg = { 0x00, 0x00, 0x00, 0 };
+
+     sdl_output = TTF_RenderText_Blended_Wrapped(font,"Lambda 3D console\ntest",font_fg,1920);
+     GLuint tex_out = SDL_GL_LoadTexture(sdl_output);
+     glEnable(GL_TEXTURE_2D);
+     glEnable(GL_BLEND);
+     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+     glBindTexture(GL_TEXTURE_2D, tex_out);
+     glBegin(GL_QUADS);
+       glTexCoord2f(0.0f, 0.0f); glVertex2f(0,0);
+       glTexCoord2f(1.0f, 0.0f); glVertex2f(sdl_output->w,0);
+       glTexCoord2f(1.0f, 1.0f); glVertex2f(sdl_output->w,sdl_output->h);
+       glTexCoord2f(0.0f, 1.0f); glVertex2f(0,sdl_output->h);
+     glEnd();
+
+     glPopMatrix();
+     SDL_FreeSurface(sdl_output);
 }
 
 void console_printf(const char* fmt, ...) {

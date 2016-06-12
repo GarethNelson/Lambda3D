@@ -47,6 +47,7 @@ void v_pre_render() {
      glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 }
 
+// TODO - make this return frame delta
 void v_post_render() {
      SDL_GL_SwapWindow(screen);
 }
