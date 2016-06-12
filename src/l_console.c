@@ -63,11 +63,17 @@ void console_printf(const char* fmt, ...) {
      fprintf(stderr,"%s",buf);
 }
 
+// TODO: move commands into another file, make dynamic and shit
+void cmd_set(int argc, char** argv) {
+}
+
 void console_defcmd(int argc, char** argv) {
      if(strcmp(argv[0],"quit")==0) {
         SDL_Event e;
         e.type = SDL_QUIT;
         SDL_PushEvent(&e);
+     } else if(strcmp(argv[0],"set")==0) {
+        cmd_set(argc, argv);
      }
 }
 
@@ -94,11 +100,19 @@ void cmdCB(OGLCONSOLE_Console console, char *cmd) {
      console_runcmd(cmd);
 }
 
+void console_log_func(void* userdata, int category, SDL_LogPriority priority, const char* message) {
+     console_printf("%s\n", message);
+}
+
 void console_init() {
      screen_res res = get_screen_res();
      glViewport( 0, 0, ( GLsizei )res.w, ( GLsizei )res.h );
      OGLCONSOLE_Create();
      OGLCONSOLE_EnterKey(cmdCB);
+     SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
+     SDL_LogSetOutputFunction(&console_log_func, NULL);
+     
+     SDL_LogInfo(SDL_LOG_CATEGORY_SYSTEM,"SDL logging started!");
      console_printf("Lambda console ready\n\n");
 }
 
