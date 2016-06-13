@@ -87,10 +87,17 @@ void cmd_set(int argc, char** argv) {
             console_printf("%s=\"%s\"\n",argv[2],argv[3]);
          break;
          case 'i':
+            set_cvar_i(argv[2],atoi(argv[3]));
+            console_printf("%s=%d\n",argv[2],atoi(argv[3]));
          break;
          case 'f':
+            set_cvar_f(argv[2],((float)atof(argv[3])));
+            console_printf("%s=%f\n",argv[2],atof(argv[3]));
          break;
          case 'b':
+            if(strcmp(argv[3],"true")==0)  set_cvar_b(argv[2],1);
+            if(strcmp(argv[3],"false")==0) set_cvar_b(argv[2],0);
+            console_printf("%s=%s",argv[2],get_cvar_i(argv[2]));
          break;
          default:
             console_printf("Error: invalid data type %s\n",argv[1]);
@@ -109,6 +116,7 @@ void console_defcmd(int argc, char** argv) {
 }
 
 void console_runcmd(char* cmdline) {
+     fprintf(stderr,"] %s\n",cmdline);
      if(strlen(cmdline)==0) return;
      int i;
      char **argv = NULL;
