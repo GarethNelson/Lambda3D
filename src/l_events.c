@@ -26,25 +26,29 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __L_EVENTS_H_
-#define __L_EVENTS_H_
+#include <stdio.h>
+#include <stdlib.h>
 
-// types of events used in event.user.code for SDL
-#define L_EV_SWITCH_REQ  1 // switch app stage requested
-#define L_EV_CVAR_CHANGE 2 // CVar changed
+#include <SDL.h>
 
-// pass one of these as a pointer in data2
-struct l_ev_switch_req {
-   int new_stage;   // 0 to keep the current stage and only change flags
-   int set_flags;   // flags to set
-   int unset_flags; // flags to unset
-};
+#include "l_events.h"
+#include "l_console.h"
 
-struct l_ev_cvar_change {
-   char* cvar_name; // we only set the name, if the value is needed, it can be retrieved
-};
+static int sdl_type_id=-1;
 
-int  get_sdl_type();
-void ev_send(int ev_type, void* ev);
+void ev_send(int ev_type, void* ev) {
+     if(sdl_type_id == -1) {
+        sdl_type_id = SDL_RegisterEvents(1);
+     }
+     SDL_Event event;
+     SDL_zero(event);
+     event.type = sdl_type_id;
+     event.user.code = ev_type;
+     event.user.data1 = NULL; // reserved for future use
+     event.user.data1 = ev;
+     SDL_PushEvent(&event);
+}
 
-#endif
+int get_sdl_type() {
+       return sdl_type_id;
+}

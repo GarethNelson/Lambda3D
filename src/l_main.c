@@ -34,6 +34,7 @@
 
 #include "v_init.h"
 #include "l_console.h"
+#include "l_events.h"
 #include "l_appflow.h"
 #include "cons_cvars.h"
 #include "oglconsole.h"
@@ -42,12 +43,22 @@ int running=1;
 int appstage=APPSTAGE_STARTUP;
 int appflags=APPFLAGS_NORMAL;
 
+void handle_l_event(SDL_Event e) {
+     console_printf("Handling event %d\n",e.user.code);
+     // TODO - actually handle, and free() stuff
+}
+
 void handle_events() {
      SDL_Event e;
      while (SDL_PollEvent(&e)) {
             if (OGLCONSOLE_SDLEvent(&e) == 0) switch(e.type) {
                case SDL_QUIT:
                  running = 0;
+               break;
+               default:
+                  if(e.type==get_sdl_type()) {
+                     handle_l_event(e); // see l_event.h and l_event.c
+                  }
                break;
             }
      }

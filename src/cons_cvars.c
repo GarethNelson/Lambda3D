@@ -29,9 +29,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "l_console.h"
+#include "l_events.h"
 
 #include "cons_cvars.h"
+
 
 struct cons_cvar_t* cvars_ht=NULL;
 
@@ -61,6 +64,12 @@ void dump_cvars() {
      }
 }
 
+static void send_cvar_ev(char* name) {
+       struct l_ev_cvar_change *change_ev = malloc(sizeof(struct l_ev_cvar_change));
+       change_ev->cvar_name = strdup(name);
+       ev_send(L_EV_CVAR_CHANGE,change_ev);
+}
+
 void set_cvar_s(char* name, char* val) {
      struct cons_cvar_t* entry=NULL;
      HASH_FIND_STR(cvars_ht,name,entry);
@@ -74,6 +83,7 @@ void set_cvar_s(char* name, char* val) {
         entry->var_type = CVAR_STRING;
         snprintf(entry->s_val,1024,"%s",val);
      }
+     send_cvar_ev(name);
 }
 
 void set_cvar_f(char* name, float val) {
@@ -89,6 +99,7 @@ void set_cvar_f(char* name, float val) {
         entry->var_type = CVAR_FLOAT;
         entry->f_val    = val;
      }
+     send_cvar_ev(name);
 }
 
 void set_cvar_i(char* name, int val) {
@@ -104,6 +115,7 @@ void set_cvar_i(char* name, int val) {
         entry->var_type = CVAR_INT;
         entry->i_val    = val;
      }
+     send_cvar_ev(name);
 }
 
 void set_cvar_b(char* name, int val) {
@@ -119,6 +131,7 @@ void set_cvar_b(char* name, int val) {
         entry->var_type = CVAR_BOOL;
         entry->i_val    = val;
      }
+     send_cvar_ev(name);
 }
 
 void toggle_cvar(char* name) {
@@ -134,6 +147,7 @@ void toggle_cvar(char* name) {
         entry->var_type = CVAR_BOOL;
         entry->i_val    = !(entry->i_val);
      }
+     send_cvar_ev(name);
 }
 
 char* get_cvar_s(char* name) {

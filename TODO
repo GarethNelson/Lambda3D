@@ -7,7 +7,7 @@ Key:
    Scripting from files (autoexec.cfg)
 *  Basic rendering
 *  CVars
-!   Send events when CVars are changed
+*   Send events when CVars are changed
    Dynamically add commands
    Tab auto complete
 ! App flow (FSM)
