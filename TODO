@@ -11,6 +11,8 @@ Key:
    Dynamically add commands
    Tab auto complete
 ! App flow (FSM)
+   Handle change request event
+   Setup/Teardown on state change
   Event subscription - call callbacks when event of certain type from l_events.h invoked
   VFS
    Mount .pak files via PhysFS
