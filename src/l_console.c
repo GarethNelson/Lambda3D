@@ -79,8 +79,23 @@ void cmd_set(int argc, char** argv) {
         console_printf("       \n");
         console_printf("       Data types supported: string(s), integer(i), float(f), boolean(b)\n");
         console_printf("       For boolean values, valid values are: true, false\n");
+        return;
      }
-     
+     switch(argv[1][0]) {
+         case 's':
+            set_cvar_s(argv[2],argv[3]);
+            console_printf("%s=\"%s\"\n",argv[2],argv[3]);
+         break;
+         case 'i':
+         break;
+         case 'f':
+         break;
+         case 'b':
+         break;
+         default:
+            console_printf("Error: invalid data type %s\n",argv[1]);
+         break;
+     }
 }
 
 void console_defcmd(int argc, char** argv) {
@@ -94,6 +109,7 @@ void console_defcmd(int argc, char** argv) {
 }
 
 void console_runcmd(char* cmdline) {
+     if(strlen(cmdline)==0) return;
      int i;
      char **argv = NULL;
      int argc;

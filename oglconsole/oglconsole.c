@@ -863,7 +863,7 @@ int OGLCONSOLE_SDLEvent(SDL_Event *e)
             OGLCONSOLE_AddHistory(userConsole, userConsole->inputLine);
 
             /* Print user's command to the console */
-            OGLCONSOLE_Output((void*)userConsole, "%s\n", userConsole->inputLine);
+            OGLCONSOLE_Output((void*)userConsole, "] %s\n", userConsole->inputLine);
 
             /* Invoke console's enter-key callback function */
             userConsole->enterKeyCallback((void*)userConsole,userConsole->inputLine);

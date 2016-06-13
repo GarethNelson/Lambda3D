@@ -26,31 +26,62 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "l_console.h"
+
 #include "cons_cvars.h"
 
-struct cons_cvars_t* cvars_ht=NULL;
+struct cons_cvar_t* cvars_ht=NULL;
 
 void dump_cvars() {
+     struct cons_cvar_t* entry=NULL;
+     for(entry=cvars_ht; entry!=NULL; entry=entry->hh.next) {
+         switch(entry->var_type) {
+            case CVAR_STRING:
+               console_printf("%s=\"%s\"\n",entry->var_name,entry->s_val);
+            break;
+            case CVAR_FLOAT:
+            break;
+            case CVAR_BOOL:
+            break;
+            case CVAR_INT:
+            break;
+         }
+     }
 }
 
-void set_cvar_s(char* var_name, char* val) {
+void set_cvar_s(char* name, char* val) {
+     struct cons_cvar_t* entry=NULL;
+     HASH_FIND_STR(cvars_ht,name,entry);
+     if(entry==NULL) {
+        entry = malloc(sizeof(struct cons_cvar_t));
+        snprintf(entry->var_name,32,"%s",name);
+        entry->var_type = CVAR_STRING;
+        snprintf(entry->s_val,1024,"%s",val);
+        HASH_ADD_STR(cvars_ht,var_name,entry);
+     } else {
+        entry->var_type = CVAR_STRING;
+        snprintf(entry->s_val,1024,"%s",val);
+     }
 }
 
-void set_cvar_f(char* var_name, float val) {
+void set_cvar_f(char* name, float val) {
 }
 
-void set_cvar_i(char* var_name, int val) {
+void set_cvar_i(char* name, int val) {
 }
 
-void toggle_cvar(char* var_name) {
+void toggle_cvar(char* name) {
 }
 
-char* get_cvar_s(char* var_name) {
+char* get_cvar_s(char* name) {
 }
 
-float get_cvar_f(char* var_name) {
+float get_cvar_f(char* name) {
 }
 
-int   get_cvar_i(char* var_name) {
+int   get_cvar_i(char* name) {
 }
 

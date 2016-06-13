@@ -47,13 +47,13 @@ struct cons_cvar_t {
 };
 
 void dump_cvars(); // dump all cvars to the console
-void set_cvar_s(char* var_name, char* val); // set a cvar to a string
-void set_cvar_f(char* var_name, float val); // set a cvar to a float
-void set_cvar_i(char* var_name, int val);   // set a cvar to an int
-void toggle_cvar(char* var_name);           // toggle a boolean cvar
+void set_cvar_s(char* name, char* val); // set a cvar to a string
+void set_cvar_f(char* name, float val); // set a cvar to a float
+void set_cvar_i(char* name, int val);   // set a cvar to an int
+void toggle_cvar(char* name);           // toggle a boolean cvar
 
-char* get_cvar_s(char* var_name); // return a copy of the value of a string cvar, must free() after
-float get_cvar_f(char* var_name); // return a float cvar's value
-int   get_cvar_i(char* var_name); // return an int/bool cvar's value
+char* get_cvar_s(char* name); // return a copy of the value of a string cvar, must free() after
+float get_cvar_f(char* name); // return a float cvar's value
+int   get_cvar_i(char* name); // return an int/bool cvar's value
 
 #endif
