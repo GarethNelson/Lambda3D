@@ -4,19 +4,39 @@ Key:
 
 * Basic skeleton SDL2/OpenGL
 ! Console system
+   Scripting from files (autoexec.cfg)
 *  Basic rendering
-!  CVars
+*  CVars
+    Send events when CVars are changed
    Dynamically add commands
    Tab auto complete
   Message passing bus
   App flow (FSM)
   VFS
+   Mount .pak files via PhysFS
+   Browse using ls/cd/cwd/cat etc in console
   Cache layer
+   Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
+   VFS cache - cache whole files
+   OpenGL texture cache - load OpenGL textures here
+   Arbitary data cache - pass a pointer and a data size, whole thing copied into cache and stored
   Splash / logo
   Loading screen
   Def format loader
+  Level renderer
+   Load tiledefs and build display lists for each tiledef
+   Build display list for whole level geometery
   Test level
   Menu system
+   Define via .def file
+   TTF font
+   Menu items can trigger console commands
+   Options menu
+    Items can specify CVar to change
+    Volume control style
+     Range of values specified in .def file
+    Boolean/checkbox style
+    Text input
   Lua binding
   Entity behaviours
 
