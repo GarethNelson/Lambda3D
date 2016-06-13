@@ -61,9 +61,12 @@ int main(int argc, char* argv[]) {
        SDL_Init(0);
     }
     SDL_InitSubSystem(SDL_INIT_EVENTS);
+
  
     v_init();
     console_init();
+
+    switch_appstage(0,appstage,0,appflags);
     
     while(running) {
        handle_events();

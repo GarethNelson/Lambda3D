@@ -39,7 +39,10 @@
 #define APPFLAGS_MENU   2 // Menu displayed
 
 // TODO: add time delta
-void update_app(int stage, int flags);
-void render_app(int stage, int flags);
+char* stage_name(int stage, int flags);
+void  switch_appstage(int old_stage, int new_stage, int old_flags, int new_flags); // must be called from l_main only
+                                                                                   // other modules can send events
+void  update_app(int stage, int flags);
+void  render_app(int stage, int flags);
 
 #endif
