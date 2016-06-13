@@ -33,11 +33,15 @@
 
 #include "l_console.h"
 #include "l_appflow.h"
+#include "cons_cvars.h"
 
 void switch_appstage(int old_stage, int new_stage, int old_flags, int new_flags) {
      char* old_s=stage_name(old_stage, old_flags);
      char* new_s=stage_name(new_stage, new_flags);
      console_printf("Switching from [%s] to [%s]\n",old_s,new_s);
+     set_cvar_s("s_stage",new_s);
+     set_cvar_i("appstage",new_stage);
+     set_cvar_i("appflags",new_flags);
      free(old_s); free(new_s);
 }
 
