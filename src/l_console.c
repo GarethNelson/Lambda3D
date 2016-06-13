@@ -38,6 +38,7 @@
 #include "l_utils.h"
 #include "v_init.h"
 #include "oglconsole.h"
+#include "cons_cvars.h"
 
 // I am aware the below seems completely pointless, there is reason to the madness
 static int is_active=1;
@@ -65,6 +66,21 @@ void console_printf(const char* fmt, ...) {
 
 // TODO: move commands into another file, make dynamic and shit
 void cmd_set(int argc, char** argv) {
+     if(argc==1) {
+        dump_cvars();
+        return;
+     }
+     if(argc != 4) {
+        console_printf("Error: insufficient parameters to set command\n");
+        console_printf("Usage: set <type> <varname> <value>\n");
+        console_printf("       <type>      one of s,i,f or b\n");
+        console_printf("       <varname>   variable name to set\n");
+        console_printf("       <value>     value to set\n");
+        console_printf("       \n");
+        console_printf("       Data types supported: string(s), integer(i), float(f), boolean(b)\n");
+        console_printf("       For boolean values, valid values are: true, false\n");
+     }
+     
 }
 
 void console_defcmd(int argc, char** argv) {

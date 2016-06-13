@@ -455,10 +455,14 @@ void OGLCONSOLE_Render(OGLCONSOLE_Console console)
         }
         else
         {
+
             /* Draw input line cyan */
+            glColor3d(1,0,0);
+            OGLCONSOLE_DrawCharacter(']'-' ',0, 0, C->characterWidth, C->characterHeight,0);
+
             glColor3d(0,1,1);
             OGLCONSOLE_DrawString(C->inputLine,
-                    0, 0,
+                    2*C->characterWidth, 0,
                     C->characterWidth,
                     C->characterHeight,
                     0);
@@ -466,7 +470,7 @@ void OGLCONSOLE_Render(OGLCONSOLE_Console console)
             /* Draw cursor beige */
             glColor3d(1,1,.5);
             OGLCONSOLE_DrawCharacter('_'-' ',
-                    C->inputCursorPos * C->characterWidth, 0,
+                    (C->inputCursorPos+2) * C->characterWidth, 0,
                     C->characterWidth,
                     C->characterHeight,
                     0);
