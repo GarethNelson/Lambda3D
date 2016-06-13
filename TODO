@@ -10,7 +10,6 @@ Key:
     Send events when CVars are changed
    Dynamically add commands
    Tab auto complete
-  Message passing bus
   App flow (FSM)
   VFS
    Mount .pak files via PhysFS

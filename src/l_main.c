@@ -34,9 +34,13 @@
 
 #include "v_init.h"
 #include "l_console.h"
+#include "l_appflow.h"
+#include "cons_cvars.h"
 #include "oglconsole.h"
 
 int running=1;
+int appstage=APPSTAGE_STARTUP;
+int appflags=APPFLAGS_NORMAL;
 
 void handle_events() {
      SDL_Event e;
@@ -60,15 +64,15 @@ int main(int argc, char* argv[]) {
  
     v_init();
     console_init();
-    console_toggle();
+    
     while(running) {
        handle_events();
 
-       // update current app stage here
+       update_app(appstage, appflags);
 
        v_pre_render();
 
-       // render current app stage here
+       render_app(appstage, appflags);
 
        console_render();
 
