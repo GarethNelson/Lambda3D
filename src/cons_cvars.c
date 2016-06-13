@@ -119,7 +119,6 @@ void set_cvar_b(char* name, int val) {
         entry->var_type = CVAR_BOOL;
         entry->i_val    = val;
      }
-
 }
 
 void toggle_cvar(char* name) {
@@ -135,15 +134,29 @@ void toggle_cvar(char* name) {
         entry->var_type = CVAR_BOOL;
         entry->i_val    = !(entry->i_val);
      }
-
 }
 
 char* get_cvar_s(char* name) {
+      struct cons_cvar_t* entry=NULL;
+      HASH_FIND_STR(cvars_ht,name,entry);
+      if(entry==NULL) return NULL;
+      if(entry->var_type != CVAR_STRING) return NULL;
+      return entry->s_val;
 }
 
 float get_cvar_f(char* name) {
+      struct cons_cvar_t* entry=NULL;
+      HASH_FIND_STR(cvars_ht,name,entry);
+      if(entry==NULL) return 0.0f;
+      if(entry->var_type != CVAR_FLOAT) return 0.0f;
+      return entry->f_val;
 }
 
 int   get_cvar_i(char* name) {
+      struct cons_cvar_t* entry=NULL;
+      HASH_FIND_STR(cvars_ht,name,entry);
+      if(entry==NULL) return 0;
+      if((entry->var_type != CVAR_INT) & (entry->var_type != CVAR_BOOL)) return 0;
+      return entry->i_val;
 }
 
