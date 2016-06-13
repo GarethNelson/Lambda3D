@@ -7,10 +7,11 @@ Key:
    Scripting from files (autoexec.cfg)
 *  Basic rendering
 *  CVars
-    Send events when CVars are changed
+!   Send events when CVars are changed
    Dynamically add commands
    Tab auto complete
-  App flow (FSM)
+! App flow (FSM)
+  Event subscription - call callbacks when event of certain type from l_events.h invoked
   VFS
    Mount .pak files via PhysFS
    Browse using ls/cd/cwd/cat etc in console

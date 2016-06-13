@@ -69,7 +69,7 @@ char* stage_name(int stage, int flags) {
       }
       if((flags & APPFLAGS_PAUSED) != 0) strncat(flags_str,"PAUSED ", 32);
       if((flags & APPFLAGS_MENU)   != 0) strncat(flags_str,"MENU ", 32);
-      snprintf(retval,1024,"Stage:%s, Flags: %s",stage_str,flags_str);
+      snprintf(retval,1024,"Stage:%s, Flags:%s",stage_str,flags_str);
       return strdup(retval);
 }
 
