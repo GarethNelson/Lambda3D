@@ -43,10 +43,19 @@ void dump_cvars() {
                console_printf("%s=\"%s\"\n",entry->var_name,entry->s_val);
             break;
             case CVAR_FLOAT:
+               console_printf("%s=%f\n",entry->var_name,entry->f_val);
             break;
             case CVAR_BOOL:
+               if(entry->i_val==1) {
+                 console_printf("%s=True\n",entry->var_name);
+               } else if(entry->i_val==0) {
+                 console_printf("%s=False\n",entry->var_name);
+               } else {
+                 console_printf("Error: %s has invalid boolean value %d\n",entry->var_name,entry->i_val);
+               }
             break;
             case CVAR_INT:
+               console_printf("%s=%d\n",entry->var_name,entry->i_val);
             break;
          }
      }
@@ -68,12 +77,65 @@ void set_cvar_s(char* name, char* val) {
 }
 
 void set_cvar_f(char* name, float val) {
+     struct cons_cvar_t* entry=NULL;
+     HASH_FIND_STR(cvars_ht,name,entry);
+     if(entry==NULL) {
+        entry = malloc(sizeof(struct cons_cvar_t));
+        snprintf(entry->var_name,32,"%s",name);
+        entry->var_type = CVAR_FLOAT;
+        entry->f_val    = val;
+        HASH_ADD_STR(cvars_ht,var_name,entry);
+     } else {
+        entry->var_type = CVAR_FLOAT;
+        entry->f_val    = val;
+     }
 }
 
 void set_cvar_i(char* name, int val) {
+     struct cons_cvar_t* entry=NULL;
+     HASH_FIND_STR(cvars_ht,name,entry);
+     if(entry==NULL) {
+        entry = malloc(sizeof(struct cons_cvar_t));
+        snprintf(entry->var_name,32,"%s",name);
+        entry->var_type = CVAR_INT;
+        entry->i_val    = val;
+        HASH_ADD_STR(cvars_ht,var_name,entry);
+     } else {
+        entry->var_type = CVAR_INT;
+        entry->i_val    = val;
+     }
+}
+
+void set_cvar_b(char* name, int val) {
+     struct cons_cvar_t* entry=NULL;
+     HASH_FIND_STR(cvars_ht,name,entry);
+     if(entry==NULL) {
+        entry = malloc(sizeof(struct cons_cvar_t));
+        snprintf(entry->var_name,32,"%s",name);
+        entry->var_type = CVAR_BOOL;
+        entry->i_val    = val;
+        HASH_ADD_STR(cvars_ht,var_name,entry);
+     } else {
+        entry->var_type = CVAR_BOOL;
+        entry->i_val    = val;
+     }
+
 }
 
 void toggle_cvar(char* name) {
+     struct cons_cvar_t* entry=NULL;
+     HASH_FIND_STR(cvars_ht,name,entry);
+     if(entry==NULL) {
+        entry = malloc(sizeof(struct cons_cvar_t));
+        snprintf(entry->var_name,32,"%s",name);
+        entry->var_type = CVAR_BOOL;
+        entry->i_val    = 0;
+        HASH_ADD_STR(cvars_ht,var_name,entry);
+     } else {
+        entry->var_type = CVAR_BOOL;
+        entry->i_val    = !(entry->i_val);
+     }
+
 }
 
 char* get_cvar_s(char* name) {

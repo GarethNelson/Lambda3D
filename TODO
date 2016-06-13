@@ -7,6 +7,7 @@ Key:
 *  Basic rendering
 !  CVars
    Dynamically add commands
+   Tab auto complete
   Message passing bus
   App flow (FSM)
   VFS

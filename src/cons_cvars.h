@@ -50,6 +50,7 @@ void dump_cvars(); // dump all cvars to the console
 void set_cvar_s(char* name, char* val); // set a cvar to a string
 void set_cvar_f(char* name, float val); // set a cvar to a float
 void set_cvar_i(char* name, int val);   // set a cvar to an int
+void set_cvar_b(char* name, int val);   // set a cvar to a boolean
 void toggle_cvar(char* name);           // toggle a boolean cvar
 
 char* get_cvar_s(char* name); // return a copy of the value of a string cvar, must free() after
