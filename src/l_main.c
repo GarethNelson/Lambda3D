@@ -44,8 +44,12 @@ int appstage=APPSTAGE_STARTUP;
 int appflags=APPFLAGS_NORMAL;
 
 void handle_l_event(SDL_Event e) {
-     console_printf("Handling event %d\n",e.user.code);
-     // TODO - actually handle, and free() stuff
+     switch(e.user.code) {
+        case L_EV_SWITCH_REQ:
+        break;
+        case L_EV_CVAR_CHANGE:
+        break;
+     }
 }
 
 void handle_events() {

@@ -45,7 +45,7 @@ void ev_send(int ev_type, void* ev) {
      event.type = sdl_type_id;
      event.user.code = ev_type;
      event.user.data1 = NULL; // reserved for future use
-     event.user.data1 = ev;
+     event.user.data2 = ev;
      SDL_PushEvent(&event);
 }
 

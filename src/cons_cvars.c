@@ -68,6 +68,7 @@ static void send_cvar_ev(char* name) {
        struct l_ev_cvar_change *change_ev = malloc(sizeof(struct l_ev_cvar_change));
        change_ev->cvar_name = strdup(name);
        ev_send(L_EV_CVAR_CHANGE,change_ev);
+       free(change_ev);
 }
 
 void set_cvar_s(char* name, char* val) {
