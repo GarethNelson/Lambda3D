@@ -105,13 +105,26 @@ void cmd_set(int argc, char** argv) {
      }
 }
 
+char *commands_str[] = {
+     "set"
+};
+
+void (*commands_func[])(int argc, char** argv) = {
+     &cmd_set
+};
+
 void console_defcmd(int argc, char** argv) {
+     int i=0;
      if(strcmp(argv[0],"quit")==0) {
         SDL_Event e;
         e.type = SDL_QUIT;
         SDL_PushEvent(&e);
-     } else if(strcmp(argv[0],"set")==0) {
-        cmd_set(argc, argv);
+     } else {
+        for(i=0; i< (sizeof(commands_str)/sizeof(char*)); i++) {
+          if(strcmp(argv[0],commands_str[i])==0) {
+              commands_func[i](argc, argv);
+           }
+        }
      }
 }
 
