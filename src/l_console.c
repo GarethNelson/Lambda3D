@@ -66,29 +66,38 @@ void console_printf(const char* fmt, ...) {
 
 void cmd_help(int argc, char** argv);
 void cmd_set(int argc, char** argv);
+void cmd_mount(int argc, char** argv);
 
 char *commands_str[] = {
      "help",
-     "set"
+     "set",
+     "mount"
 };
 
 void (*commands_func[])(int argc, char** argv) = {
      &cmd_help,
-     &cmd_set
+     &cmd_set,
+     &cmd_mount
 };
 
 // TODO: move commands into another file, make dynamic and shit
+void cmd_mount(int argc, char** argv) {
+     
+}
+
 void cmd_set(int argc, char** argv) {
      if(argc==1) {
         dump_cvars();
         return;
      }
      if(argc != 4) {
-        if(argc==1) { 
+        if(argc==2) { 
           if(strcmp(argv[1],"-h")==0) {
           } else {
             console_printf("Error: insufficient parameters to set command\n");
           }
+        } else {
+           console_printf("Error: insufficient parameters to set command\n");
         }
         console_printf("Usage: set <type> <varname> <value>\n");
         console_printf("       <type>      one of s,i,f or b\n");

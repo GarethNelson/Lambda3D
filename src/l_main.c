@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <physfs.h>
 #include <SDL.h>
 
 #include "v_init.h"
@@ -80,6 +81,12 @@ int main(int argc, char* argv[]) {
  
     v_init();
     console_init();
+
+    if(PHYSFS_init(argv[0])==0) {
+       SDL_LogError(SDL_LOG_CATEGORY_SYSTEM,"Could not setup PhysFS - VFS will not be operational!");
+    } else {
+       SDL_LogInfo(SDL_LOG_CATEGORY_SYSTEM,"Loaded PhysFS - VFS will be operational");
+    }
 
     switch_appstage(0,appstage,0,appflags);
     
