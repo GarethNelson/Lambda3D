@@ -85,6 +85,31 @@ void (*commands_func[])(int argc, char** argv) = {
 
 // TODO: move commands into another file, make dynamic and shit
 void cmd_ls(int argc, char** argv) {
+     char **rc;
+     char **i;
+     char *wd;
+     if(argc==1) {
+        wd = get_cvar_s("cwd");
+      }
+
+     if(argc==2) {
+        if(strcmp(argv[1],"-h")==0) {
+           console_printf("Usage: ls <dir>\n");
+           console_printf("       <dir> path to list, if not specified, current directory is default\n");
+           return;
+        }
+        wd = argv[1];
+     }
+
+     rc = PHYSFS_enumerateFiles(wd);
+     for(i=rc; *i !=NULL; i++) {
+         if(wd[strlen(wd)-1] != '/') {
+            console_printf("%s/%s\n",wd,*i);
+         } else {
+            console_printf("%s%s\n",wd,*i);
+         }
+     }
+     PHYSFS_freeList(rc);
 }
 
 void cmd_mount(int argc, char** argv) {
