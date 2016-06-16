@@ -30,6 +30,11 @@
 #define __CONS_CMDS_H_
 void cmd_help(int argc, char** argv);
 void cmd_set(int argc, char** argv);
+void cmd_mount(int argc, char** argv);
+void cmd_ls(int argc, char** argv);
+void cmd_pwd(int argc, char** argv);
+void cmd_cd(int argc, char** argv);
+void cmd_cat(int argc, char** argv);
 
 struct cons_cmd {
     char*   cmd_str;
@@ -37,8 +42,6 @@ struct cons_cmd {
     void  (*cmd_func)(int argc, char** argvv);
 };
 
-struct cons_cmd cons_commands[] = {
-  {"help","",&cmd_help},
-  {"set", "",&cmd_set}
-};
+unsigned int get_cmd_count();
+
 #endif
