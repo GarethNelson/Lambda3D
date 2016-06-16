@@ -35,6 +35,30 @@
 #include "l_appflow.h"
 #include "cons_cvars.h"
 
+void default_init(void* params) {
+     console_printf("Default init called for stage\n");
+}
+
+void default_cleanup() {
+     console_printf("Default cleanup called for stage\n");
+}
+
+void default_update() {
+}
+
+void default_render() {
+}
+
+struct app_stage_t* app_stage_table=NULL;
+static struct app_stage_t app_stages[] = {
+  {APPSTAGE_STARTUP,   "Startup",         &default_init,&default_cleanup,&default_update,&default_render},
+  {APPSTAGE_SPLASH,    "Splash screen",   &default_init,&default_cleanup,&default_update,&default_render},
+  {APPSTAGE_STARTMENU, "Start menu",      &default_init,&default_cleanup,&default_update,&default_render},
+  {APPSTAGE_LOADSCREEN,"Loading screen",  &default_init,&default_cleanup,&default_update,&default_render},
+  {APPSTAGE_INGAME,    "Ingame",          &default_init,&default_cleanup,&default_update,&default_render},
+  {APPSTAGE_GAMEOVER,  "Game over screen",&default_init,&default_cleanup,&default_update,&default_render},
+};
+
 void switch_appstage(int old_stage, int new_stage, int old_flags, int new_flags) {
      char* old_s=stage_name(old_stage, old_flags);
      char* new_s=stage_name(new_stage, new_flags);

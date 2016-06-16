@@ -33,11 +33,25 @@
 #define APPSTAGE_SPLASH     2 // Display logo
 #define APPSTAGE_STARTMENU  3 // Display menu with new game etc
 #define APPSTAGE_LOADSCREEN 4 // Display loading screen and load whatever resources
+#define APPSTAGE_INGAME     5 // In an actual game
+#define APPSTAGE_GAMEOVER   6 // Game over screen
 
 #define APPFLAGS_NORMAL 0 // Normal state
 #define APPFLAGS_PAUSED 1 // Paused
 #define APPFLAGS_MENU   2 // Menu displayed
 #define APPFLAGS_DEBUG  4 // Show debug info
+
+struct app_stage_t {
+   int    stage_id;
+   char*  stage_name;
+   void   (*init)(void* params);
+   void   (*cleanup)();
+   void   (*update)();
+   void   (*render)();
+};
+
+// see l_appflow.c
+struct app_stage_t* app_stage_table;
 
 // TODO: add time delta
 char* stage_name(int stage, int flags);

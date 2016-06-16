@@ -14,7 +14,8 @@ Key:
 *   Add predefined commands using an init function - same as dynamic commands
 *  Tab auto complete
 ! App flow (FSM)
-   Implement table of states with callbacks
+!  Implement table of states with callbacks
+    Dynamically loaded
 *  Handle change request event
    Setup/Teardown on state change
 *  Implement time stepping
