@@ -50,9 +50,25 @@ static struct cons_cmd builtin_commands[] = {
      "For boolean values, valid values are: true, false",
      "Type set without params to see current CVars"},
    &cmd_set},
-/*  {"mount","","",&cmd_mount},
-  {"ls",   "","",&cmd_ls},
-  {"pwd",  "","",&cmd_pwd},
+  {"mount","Mounts an archive in the VFS",
+    {"archive","mountpoint",NULL},
+    {"The archive or directory to mount",
+     "Where in the VFS to mount it",
+     NULL},
+    {"Type mount without params to see currently mounted archives",
+     "VFS support is implemented by PhysFS, see documentation for details on file formats supported",
+     "Please note that .pk3 files are plain zip files"},
+   &cmd_mount},
+  {"ls","Lists a directory in the VFS",
+    {"dir",NULL,NULL},
+    {"The directory path to list, leave blank for current directory",
+     NULL,
+     NULL},
+    {NULL,NULL,NULL},
+   &cmd_ls},
+  
+
+/*  {"pwd",  "","",&cmd_pwd},
   {"cd",   "","",&cmd_cd},
   {"cat",  "","",&cmd_cat}*/
 };
@@ -82,10 +98,6 @@ void cmd_cat(int argc, char** argv) {
      if(argc!=2) {
         console_printf("Error! insufficient parameters to cat command\n");
         return;
-     }
-     if(strcmp(argv[1],"-h")==0) {
-        console_printf("Usage: cat <filename>\n");
-        console_printf("       <filename> the file to dump to console\n");
      }
      char filepath[PATH_MAX];
      if(argv[1][0]=='/') {
@@ -220,27 +232,12 @@ void cmd_mount(int argc, char** argv) {
         return;
      }
      if(argc==2) {
-        if(strcmp(argv[1],"-h")==0) {
-           console_printf("Usage: mount <archive> <mountpoint\n");
-           console_printf("       <archive>     path to an archive file to mount\n");
-           console_printf("       <mountpoint>  where in the VFS to mount it - if not specified, / is default\n");
-           console_printf("       Archives supported:\n");
-           for(ar_info = (PHYSFS_ArchiveInfo**)PHYSFS_supportedArchiveTypes(); *ar_info != NULL; ar_info++) {
-               console_printf("         %s - %s\n", (*ar_info)->extension, (*ar_info)->description);
-           }
-           console_printf("       Please note that .pk3 files are identical to .zip files\n");
-           console_printf("       It is also possible to mount directories as archives\n");
-           console_printf("       Type mount without params to see currently mounted archives\n");
+        int retval=0;
+        retval = PHYSFS_mount((const char*)argv[1],"",0);
+        if(retval==0) {
+           console_printf("Error mounting: %s\n",PHYSFS_getLastError());
            return;
-        } else {
-           int retval=0;
-           retval = PHYSFS_mount((const char*)argv[1],"",0);
-           if(retval==0) {
-              console_printf("Error mounting: %s\n",PHYSFS_getLastError());
-              return;
-           }
         }
-        return;
     }
     if(argc==3) {
        int retval=0;
@@ -255,25 +252,6 @@ void cmd_mount(int argc, char** argv) {
 void cmd_set(int argc, char** argv) {
      if(argc==1) {
         dump_cvars();
-        return;
-     }
-     if(argc != 4) {
-        if(argc==2) { 
-          if(strcmp(argv[1],"-h")==0) {
-          } else {
-            console_printf("Error: insufficient parameters to set command\n");
-          }
-        } else {
-           console_printf("Error: insufficient parameters to set command\n");
-        }
-        console_printf("Usage: set <type> <varname> <value>\n");
-        console_printf("       <type>      one of s,i,f or b\n");
-        console_printf("       <varname>   variable name to set\n");
-        console_printf("       <value>     value to set\n");
-        console_printf("       \n");
-        console_printf("       Data types supported: string(s), integer(i), float(f), boolean(b)\n");
-        console_printf("       For boolean values, valid values are: true, false\n");
-        console_printf("       Type set without params to see current CVars\n");
         return;
      }
      switch(argv[1][0]) {

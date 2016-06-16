@@ -37,12 +37,12 @@ void cmd_cd(int argc, char** argv);
 void cmd_cat(int argc, char** argv);
 
 struct cons_cmd {
-    char*   cmd_str;
-    char*   help_str;
-    char*   param_list[3];
-    char*   param_desc[3];
-    char*   extra_help[3];
-    void    (*cmd_func)(int argc, char** argvv);
+    char*   cmd_str;         // the actual command typed in the console
+    char*   help_str;        // description of what the command does
+    char*   param_list[3];   // list of parameters
+    char*   param_desc[3];   // description of parameters
+    char*   extra_help[3];   // extra help lines
+    void    (*cmd_func)(int argc, char** argvv); // the function to invoke
 };
 
 struct cons_cmd* cons_commands;
