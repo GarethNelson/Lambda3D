@@ -71,6 +71,7 @@ void cmd_mount(int argc, char** argv);
 void cmd_ls(int argc, char** argv);
 void cmd_pwd(int argc, char** argv);
 void cmd_cd(int argc, char** argv);
+void cmd_cat(int argc, char** argv);
 
 char *commands_str[] = {
      "help",
@@ -78,7 +79,8 @@ char *commands_str[] = {
      "mount",
      "ls",
      "pwd",
-     "cd"
+     "cd",
+     "cat"
 };
 
 void (*commands_func[])(int argc, char** argv) = {
@@ -87,10 +89,48 @@ void (*commands_func[])(int argc, char** argv) = {
      &cmd_mount,
      &cmd_ls,
      &cmd_pwd,
-     &cmd_cd
+     &cmd_cd,
+     &cmd_cat
 };
 
 // TODO: move commands into another file, make dynamic and shit
+void cmd_cat(int argc, char** argv) {
+     if(argc!=2) {
+        console_printf("Error! insufficient parameters to cat command\n");
+        return;
+     }
+     if(strcmp(argv[1],"-h")==0) {
+        console_printf("Usage: cat <filename>\n");
+        console_printf("       <filename> the file to dump to console\n");
+     }
+     char filepath[PATH_MAX];
+     if(argv[1][0]=='/') {
+        snprintf(filepath,PATH_MAX-1,"%s",argv[1]);
+     } else {
+        char *cwd = get_cvar_s("cwd");
+        if(cwd[strlen(cwd)-1]=='/') {
+           snprintf(filepath,PATH_MAX-1,"%s%s",cwd,argv[1]);
+        } else {
+           snprintf(filepath,PATH_MAX-1,"%s/%s",cwd,argv[1]);
+        }
+     }
+     if(PHYSFS_exists((const char*)filepath)==0) {
+        console_printf("Error! File %s not found or not a file\n",filepath);
+        return;
+     }
+     PHYSFS_File* fd = PHYSFS_openRead((const char*)filepath);
+     if(fd==NULL) {
+        console_printf("Error! %s\n",PHYSFS_getLastError());
+        return;
+     }
+     PHYSFS_sint64 f_size = PHYSFS_fileLength(fd);
+     void* f_data = malloc(f_size);
+     PHYSFS_read(fd,f_data,f_size,1);
+     console_printf("%s\n",(char*)f_data);
+     free(f_data);
+     PHYSFS_close(fd);
+}
+
 void cmd_cd(int argc, char** argv) {
      if(argc!=2) {
         console_printf("Error! insufficient parameters to cd command\n");

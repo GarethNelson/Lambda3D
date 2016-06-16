@@ -18,7 +18,7 @@ Key:
    Setup/Teardown on state change
   VFS
 *  Mount .pak files via PhysFS
-!  Browse using ls/cd/cwd/cat etc in console
+*  Browse using ls/cd/cwd/cat etc in console
   Cache layer
    Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
    VFS cache - cache whole files
