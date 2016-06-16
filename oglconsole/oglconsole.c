@@ -778,8 +778,6 @@ int OGLCONSOLE_SDLEvent(SDL_Event *e)
             return 1;
         }
         if (e->key.keysym.sym == KEY_TAB) {
-            printf("TAB search %s\n", userConsole->inputLine);
-            printf("TAB search result %s\n",userConsole->tabCompleteCallback((void*)userConsole,userConsole->inputLine));
             char* part=userConsole->tabCompleteCallback((void*)userConsole,userConsole->inputLine);
             int i=0;
             for(i=0; i<strlen(part); i++) {

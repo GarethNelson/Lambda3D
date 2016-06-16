@@ -110,7 +110,15 @@ void cmdCB(OGLCONSOLE_Console console, char *cmd) {
 }
 
 char* tabCB(OGLCONSOLE_Console console, char *partial) {
-     return "test";
+      char* cmd_name;
+      int i;
+      for(i=0; i < get_cmd_count(); i++) {
+          cmd_name = cons_commands[i].cmd_str;
+          if(strncmp(partial,cmd_name,strlen(partial))==0) {
+             return(cmd_name+strlen(partial));
+          }
+      }
+      return "test";
 }
 
 void console_log_func(void* userdata, int category, SDL_LogPriority priority, const char* message) {

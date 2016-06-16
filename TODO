@@ -3,7 +3,7 @@ Key:
  ! in progress
 
 * Basic skeleton SDL2/OpenGL
-! Console system
+* Console system
 *  Scripting from files (autoexec.cfg)
 *  Basic rendering
 *  CVars
@@ -12,7 +12,7 @@ Key:
 *   Dynamically add commands
 *   Move commands into seperate C module
 *   Add predefined commands using an init function - same as dynamic commands
-!  Tab auto complete
+*  Tab auto complete
 ! App flow (FSM)
    Handle change request event
    Setup/Teardown on state change
