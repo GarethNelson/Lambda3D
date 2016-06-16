@@ -127,6 +127,7 @@ typedef struct
 
     /* Various callback functions defined by the user */
     void(*enterKeyCallback)(OGLCONSOLE_Console console, char *cmd);
+    char* (*tabCompleteCallback)(OGLCONSOLE_Console console, char* partial);
 
 } _OGLCONSOLE_Console;
 
@@ -140,6 +141,16 @@ _OGLCONSOLE_Console *userConsole = NULL;
 void OGLCONSOLE_EnterKey(void(*cbfun)(OGLCONSOLE_Console console, char *cmd))
 {
     programConsole->enterKeyCallback = cbfun;
+}
+
+void OGLCONSOLE_TabComplete(char*(*cbfun)(OGLCONSOLE_Console console, char*partial))
+{
+    programConsole->tabCompleteCallback = cbfun;
+}
+
+char* OGLCONSOLE_DefaultTabCompleteCallback(OGLCONSOLE_Console console, char *cmd)
+{
+    return "";
 }
 
 void OGLCONSOLE_DefaultEnterKeyCallback(OGLCONSOLE_Console console, char *cmd)
@@ -218,6 +229,7 @@ OGLCONSOLE_Console OGLCONSOLE_Create()
 
     /* Callbacks */
     console->enterKeyCallback = OGLCONSOLE_DefaultEnterKeyCallback;
+    console->tabCompleteCallback = OGLCONSOLE_DefaultTabCompleteCallback;
 
     /* The console starts life invisible */
     console->visibility = 0;
@@ -729,6 +741,7 @@ void OGLCONSOLE_YankHistory(_OGLCONSOLE_Console *console)
 #define KEY_RIGHT       SDLK_RIGHT
 #define KEY_PAGEUP      SDLK_PAGEUP
 #define KEY_PAGEDOWN    SDLK_PAGEDOWN
+#define KEY_TAB         SDLK_TAB
 #define KMOD_CAPITALIZE (KMOD_LSHIFT|KMOD_RSHIFT|KMOD_CAPS)
 int OGLCONSOLE_SDLEvent(SDL_Event *e)
 {
@@ -762,6 +775,10 @@ int OGLCONSOLE_SDLEvent(SDL_Event *e)
             /* Disable key repeat */
 //            SDL_EnableKeyRepeat(0, 0);
             return 1;
+        }
+        if (e->key.keysym.sym == KEY_TAB) {
+            printf("TAB search %s\n", userConsole->inputLine);
+            printf("TAB search result %s\n",userConsole->tabCompleteCallback((void*)userConsole,userConsole->inputLine));
         }
         
         /* TODO: Find out how to handle CAPSLOCK */
