@@ -37,6 +37,7 @@
 #include "l_console.h"
 #include "l_events.h"
 #include "l_appflow.h"
+#include "r_2d.h"
 #include "cons_cvars.h"
 #include "oglconsole.h"
 
@@ -150,6 +151,8 @@ int main(int argc, char** argv) {
     int last_frame=SDL_GetTicks();
     int t = SDL_GetTicks();
     float delta;
+    set_cvar_f("fps",60);
+    set_cvar_f("delta",16);
     while(running) {
        delta = t-last_frame;
        last_frame = t;

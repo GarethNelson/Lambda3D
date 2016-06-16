@@ -20,7 +20,7 @@ Key:
 *  Setup/Teardown on state change
 *  Implement time stepping
 *  Add debug command
-  Implement debug overlay
+* Implement debug overlay
 * VFS
 *  Mount .pak files via PhysFS
 *  Browse using ls/cd/cwd/cat etc in console
@@ -31,8 +31,8 @@ Key:
      Switch to cache layer
      Load from SDL surface
     2D
-     Text
-      Basic (for debug info)
+!    Text
+*     Basic (for debug info)
       TTF
      Textured quad
     3D

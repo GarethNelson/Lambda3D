@@ -34,6 +34,7 @@
 #include "l_console.h"
 #include "l_appflow.h"
 #include "cons_cvars.h"
+#include "r_2d.h"
 
 void default_init(void* params) {
      console_printf("Default init called for stage\n");
@@ -149,6 +150,8 @@ void update_app(int stage, int flags) {
      }
 }
 
+
+char debug_info[32];
 void render_app(int stage, int flags) {
      switch(stage) {
         case APPSTAGE_STARTUP:
@@ -168,6 +171,8 @@ void render_app(int stage, int flags) {
         break;
      }
      if((flags & APPFLAGS_DEBUG) != 0) {
+       snprintf(debug_info,32,"FPS: %f, Delta: %f",get_cvar_f("fps"),get_cvar_f("delta"));
+       draw_debug_text(debug_info,0,0);
      }
 }
 

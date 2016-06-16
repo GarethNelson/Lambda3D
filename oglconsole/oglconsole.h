@@ -9,6 +9,23 @@
 extern "C" {
 #endif
 
+#define CHAR_PIXEL_W 6
+#define CHAR_PIXEL_H 13
+#define CHAR_WIDTH 0.0234375 /* ogl tex coords */
+#define CHAR_HEIGHT 0.203125 /* ogl tex coords */
+
+#ifdef GLHEADERINCLUDE
+#  include GLHEADERINCLUDE
+#else
+#  ifdef __MACH__
+#    include <OpenGL/gl.h>
+#  else
+#    include <GL/gl.h>
+#  endif
+#endif
+
+GLuint OGLCONSOLE_glFontHandle;
+
 /* Opaque to you you lowly user */
 typedef struct _OGLCONSOLE_Console *OGLCONSOLE_Console;
 
@@ -22,6 +39,8 @@ void OGLCONSOLE_Quit();
 /* This function renders the console */
 void OGLCONSOLE_Draw();
 void OGLCONSOLE_Render(OGLCONSOLE_Console console);
+void OGLCONSOLE_DrawString(char *s, double x, double y, double w, double h,
+        double z);
 
 /* Print to the console */
 void OGLCONSOLE_Print(char *s, ...);
