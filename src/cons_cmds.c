@@ -66,11 +66,27 @@ static struct cons_cmd builtin_commands[] = {
      NULL},
     {NULL,NULL,NULL},
    &cmd_ls},
-  
-
-/*  {"pwd",  "","",&cmd_pwd},
-  {"cd",   "","",&cmd_cd},
-  {"cat",  "","",&cmd_cat}*/
+  {"pwd","Prints the current directory to the console",
+   {NULL,NULL,NULL},
+   {NULL,NULL,NULL},
+   {"This command simply displays the contents of the cwd CVar",NULL,NULL},
+  &cmd_pwd}, 
+  {"cd","Changes current working directory",
+   {"dir",NULL,NULL},
+   {"The directory to change to, do not add a trailing slash (/), may be relative to current directory or absolute",
+    NULL,
+    NULL},
+   {NULL,NULL,NULL},
+  &cmd_cd},
+  {"cat","Dumps a file from the VFS to the console",
+   {"filename",NULL,NULL},
+   {"The file to display - this should be an ASCII text file",
+    NULL,
+    NULL},
+   {"Please note that very small files or binary files may corrupt the console display",
+    NULL,
+    NULL},
+   &cmd_cat},
 };
 
 struct cons_cmd* cons_commands=NULL;
@@ -132,12 +148,6 @@ void cmd_cd(int argc, char** argv) {
         console_printf("Error! insufficient parameters to cd command\n");
         return;
      }
-     if(strcmp(argv[1],"-h")==0) {
-        console_printf("Usage: cd <path\n");
-        console_printf("       <path> path to change to, do not use trailing /\n");
-        console_printf("       The path may be relative to CWD or absolute\n");
-        return;
-     }
      char new_cwd[PATH_MAX];
      if(argv[1][0]=='/') {
         snprintf(new_cwd,PATH_MAX-1,"%s/",argv[1]);
@@ -179,10 +189,6 @@ void cmd_pwd(int argc, char** argv) {
         if(strcmp(argv[1],"-h")!=0) {
            console_printf("Error: pwd command takes no parameters\n");
         }
-        console_printf("Usage: pwd\n");
-        console_printf("       pwd simply returns the current working directory\n");
-        console_printf("       Note that this is done by printing the cwd CVar, which may be set to something invalid\n");
-        return;
      }
      console_printf("%s\n",get_cvar_s("cwd"));
 }
@@ -196,11 +202,6 @@ void cmd_ls(int argc, char** argv) {
       }
 
      if(argc==2) {
-        if(strcmp(argv[1],"-h")==0) {
-           console_printf("Usage: ls <dir>\n");
-           console_printf("       <dir> path to list, if not specified, current directory is default\n");
-           return;
-        }
         wd = argv[1];
      }
 
