@@ -11,6 +11,7 @@ find_package(OpenGL REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS}
                     ${FREETYPE2_INCLUDE_DIRS}
                     ${CMAKE_CURRENT_SOURCE_DIR}/include
+                    ${CMAKE_CURRENT_SOURCE_DIR}/deps/soil
                     ${CMAKE_CURRENT_SOURCE_DIR}/oglconsole)
 
 
@@ -23,6 +24,8 @@ endif()
 file(GLOB engine_SRC
      "src/*.c"
      "src/*.h"
+     "deps/soil/*.c"
+     "deps/soil/*.h"
      "oglconsole/ConsoleFont.c"
      "oglconsole/oglconsole.c"
      "oglconsole/oglconsole.h")

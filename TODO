@@ -25,6 +25,10 @@ Key:
 *  Browse using ls/cd/cwd/cat etc in console
   Rendering lib
    Implement basic operations
+!   Texture loading
+*    Load from VFS
+     Switch to cache layer
+     Load from SDL surface
     2D
      Text
       Basic (for debug info)
