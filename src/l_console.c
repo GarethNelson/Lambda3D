@@ -31,6 +31,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <wordexp.h>
+#include <limits.h>
 
 #include <SDL.h>
 #include <physfs.h>
@@ -69,6 +70,7 @@ void cmd_set(int argc, char** argv);
 void cmd_mount(int argc, char** argv);
 void cmd_ls(int argc, char** argv);
 void cmd_pwd(int argc, char** argv);
+void cmd_cd(int argc, char** argv);
 
 char *commands_str[] = {
      "help",
@@ -76,6 +78,7 @@ char *commands_str[] = {
      "mount",
      "ls",
      "pwd",
+     "cd"
 };
 
 void (*commands_func[])(int argc, char** argv) = {
@@ -83,10 +86,58 @@ void (*commands_func[])(int argc, char** argv) = {
      &cmd_set,
      &cmd_mount,
      &cmd_ls,
-     &cmd_pwd
+     &cmd_pwd,
+     &cmd_cd
 };
 
 // TODO: move commands into another file, make dynamic and shit
+void cmd_cd(int argc, char** argv) {
+     if(argc!=2) {
+        console_printf("Error! insufficient parameters to cd command\n");
+        return;
+     }
+     if(strcmp(argv[1],"-h")==0) {
+        console_printf("Usage: cd <path\n");
+        console_printf("       <path> path to change to, do not use trailing /\n");
+        console_printf("       The path may be relative to CWD or absolute\n");
+        return;
+     }
+     char new_cwd[PATH_MAX];
+     if(argv[1][0]=='/') {
+        snprintf(new_cwd,PATH_MAX-1,"%s/",argv[1]);
+     } else {
+        char *cwd = get_cvar_s("cwd");
+        if(cwd[strlen(cwd)-1]=='/') {
+          snprintf(new_cwd,PATH_MAX-1,"%s%s/",get_cvar_s("cwd"),argv[1]);
+        } else {
+          snprintf(new_cwd,PATH_MAX-1,"%s/%s/",get_cvar_s("cwd"),argv[1]);
+        }
+     }
+     if(strcmp(argv[1],"/")==0) {
+        set_cvar_s("cwd","/");
+        return;
+     }
+     int in_mount=0;
+     int i=0;
+     char **p;
+     for(p = PHYSFS_getSearchPath(); *p != NULL; p++) {
+         if(strcmp(new_cwd+1,PHYSFS_getMountPoint(*p))==0) in_mount=1;
+         i++; // needed for bugfix in PHYSFS_freeList
+     }
+     if(i>1) PHYSFS_freeList(p);
+     if(in_mount==0) {
+        if(PHYSFS_exists((const char*)new_cwd)==0) {
+           console_printf("Error! Path %s not found\n",new_cwd);
+           return;
+        }
+        if(PHYSFS_isDirectory((const char*)new_cwd)==0) {
+           console_printf("Error! %s is not a directory!\n",new_cwd);
+           return;
+        }
+     }
+     set_cvar_s("cwd",new_cwd);
+}
+
 void cmd_pwd(int argc, char** argv) {
      if(argc==2) {
         if(strcmp(argv[1],"-h")!=0) {
@@ -119,10 +170,14 @@ void cmd_ls(int argc, char** argv) {
 
      rc = PHYSFS_enumerateFiles(wd);
      for(i=rc; *i !=NULL; i++) {
-         if(wd[strlen(wd)-1] != '/') {
-            console_printf("%s/%s\n",wd,*i);
+         if(argc==1) {
+            console_printf("%s\n",*i);
          } else {
-            console_printf("%s%s\n",wd,*i);
+            if(wd[strlen(wd)-1] != '/') {
+               console_printf("%s/%s\n",wd,*i);
+            } else {
+               console_printf("%s%s\n",wd,*i);
+            }
          }
      }
      PHYSFS_freeList(rc);
