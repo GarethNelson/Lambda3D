@@ -34,15 +34,15 @@
 #define L_EV_CVAR_CHANGE 2 // CVar changed
 
 // pass one of these as a pointer in data2
-struct l_ev_switch_req {
+typedef struct l_ev_switch_req {
    int new_stage;   // 0 to keep the current stage and only change flags
    int set_flags;   // flags to set
    int unset_flags; // flags to unset
-};
+} l_ev_switch_req;
 
-struct l_ev_cvar_change {
+typedef struct l_ev_cvar_change {
    char* cvar_name; // we only set the name, if the value is needed, it can be retrieved
-};
+} l_ev_cvar_change;
 
 int  get_sdl_type();
 void ev_send(int ev_type, void* ev);

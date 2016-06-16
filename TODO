@@ -14,7 +14,8 @@ Key:
 *   Add predefined commands using an init function - same as dynamic commands
 *  Tab auto complete
 ! App flow (FSM)
-   Handle change request event
+   Implement table of states with callbacks
+*  Handle change request event
    Setup/Teardown on state change
 * VFS
 *  Mount .pak files via PhysFS
