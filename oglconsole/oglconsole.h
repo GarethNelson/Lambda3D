@@ -29,6 +29,7 @@ void OGLCONSOLE_Output(OGLCONSOLE_Console console, const char *s, ...);
 
 /* Register a callback with the console */
 void OGLCONSOLE_EnterKey(void(*cbfun)(OGLCONSOLE_Console console, char *cmd));
+void OGLCONSOLE_TabComplete(char*(*cbfun)(OGLCONSOLE_Console console, char*partial));
 
 /* This function tries to handle the incoming SDL event. In the future there may
  * be non-SDL analogs for input systems such as GLUT. Returns true if the event

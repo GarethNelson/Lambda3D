@@ -35,5 +35,6 @@ void console_init();
 void console_render();
 void console_runcmd(char* cmd);
 void console_printf(const char* fmt, ...);
+void console_runscript(char* filename);
 
 #endif

@@ -109,6 +109,9 @@ void cmdCB(OGLCONSOLE_Console console, char *cmd) {
      console_runcmd(cmd);
 }
 
+char* tabCB(OGLCONSOLE_Console console, char *partial) {
+}
+
 void console_log_func(void* userdata, int category, SDL_LogPriority priority, const char* message) {
      console_printf("%s\n", message);
 }
@@ -144,6 +147,7 @@ void console_init() {
      glViewport( 0, 0, ( GLsizei )res.w, ( GLsizei )res.h );
      OGLCONSOLE_Create();
      OGLCONSOLE_EnterKey(cmdCB);
+     OGLCONSOLE_TabComplete(tabCB);
      SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
      SDL_LogSetOutputFunction(&console_log_func, NULL);
      
