@@ -32,6 +32,8 @@
 #include <physfs.h>
 
 #include "l_console.h"
+#include "l_events.h"
+#include "l_appflow.h"
 #include "cons_cvars.h"
 #include "cons_cmds.h"
 
@@ -41,6 +43,11 @@ static struct cons_cmd builtin_commands[] = {
     {"the command to get usage info for",NULL,NULL},
     {NULL,NULL,NULL},
     &cmd_help},
+  {"debug", "Toggles debug overlay",
+    {NULL,NULL,NULL},
+    {NULL,NULL,NULL},
+    {"The debug overlay displays information such as FPS etc onscreen after rendering",NULL,NULL},
+  &cmd_debug},
   {"set", "Sets a CVar to a specific value", 
     {"type","varname","value"},
     {"one of s,i,f or b",
@@ -108,6 +115,14 @@ void init_cmd_table() {
      for(i=0; i< (sizeof(builtin_commands)/sizeof(struct cons_cmd)); i++) {
          add_command(builtin_commands[i]);
      }
+}
+
+void cmd_debug(int argc, char** argv) {
+     l_ev_switch_req *req = malloc(sizeof (l_ev_switch_req));
+     req->new_stage   = 0;
+     req->set_flags   = APPFLAGS_DEBUG;
+     req->unset_flags = 0;
+     ev_send(L_EV_SWITCH_REQ,req);
 }
 
 void cmd_cat(int argc, char** argv) {

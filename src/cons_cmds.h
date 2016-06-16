@@ -35,6 +35,7 @@ void cmd_ls(int argc, char** argv);
 void cmd_pwd(int argc, char** argv);
 void cmd_cd(int argc, char** argv);
 void cmd_cat(int argc, char** argv);
+void cmd_debug(int argc, char** argv);
 
 struct cons_cmd {
     char*   cmd_str;         // the actual command typed in the console

@@ -17,6 +17,8 @@ Key:
    Implement table of states with callbacks
 *  Handle change request event
    Setup/Teardown on state change
+   Implement time stepping
+   Add debug command
 * VFS
 *  Mount .pak files via PhysFS
 *  Browse using ls/cd/cwd/cat etc in console

@@ -37,6 +37,7 @@
 #define APPFLAGS_NORMAL 0 // Normal state
 #define APPFLAGS_PAUSED 1 // Paused
 #define APPFLAGS_MENU   2 // Menu displayed
+#define APPFLAGS_DEBUG  4 // Show debug info
 
 // TODO: add time delta
 char* stage_name(int stage, int flags);
