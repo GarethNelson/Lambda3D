@@ -69,7 +69,38 @@ void handle_events() {
      }
 }
 
-int main(int argc, char* argv[]) {
+static char* mount_file=NULL; // file to mount supplied from command line
+static char* exe_name=NULL;
+
+void print_usage() {
+     fprintf(stderr,"usage: %s [-f filename] [-h]\n",exe_name);
+     fprintf(stderr,"       -f mount an archive to the VFS root before starting the engine\n");
+     fprintf(stderr,"       -h show this usage information\n");
+}
+
+void handle_opts(int argc, char** argv) {
+     extern char *optarg;
+     extern int optind;
+     int c=0;
+
+     exe_name = strdup(argv[0]);
+
+     while((c = getopt(argc, argv, "f:h")) != -1) {
+         switch(c) {
+             case 'f':
+                mount_file = strdup(optarg);
+             break;
+             case 'h':
+                print_usage();
+                exit(0);
+             break;
+         }
+     }
+}
+
+int main(int argc, char** argv) {
+    handle_opts(argc, argv);
+
     setbuf(stdout,NULL);
     printf("\n*** LAMBDA ENGINE STARTUP ***\n\n");
 
@@ -77,15 +108,22 @@ int main(int argc, char* argv[]) {
        SDL_Init(0);
     }
     SDL_InitSubSystem(SDL_INIT_EVENTS);
-
  
     v_init();
     console_init();
 
     if(PHYSFS_init(argv[0])==0) {
        SDL_LogError(SDL_LOG_CATEGORY_SYSTEM,"Could not setup PhysFS - VFS will not be operational!");
+       exit(1);
     } else {
        SDL_LogInfo(SDL_LOG_CATEGORY_SYSTEM,"Loaded PhysFS - VFS will be operational");
+    }
+
+    if(mount_file != NULL) {
+      int retval=PHYSFS_mount((const char*)mount_file,"",0);
+      if(retval==0) {
+         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,"Could not mount file %s",mount_file);
+      }
     }
 
     switch_appstage(0,appstage,0,appflags);

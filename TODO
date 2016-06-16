@@ -16,7 +16,7 @@ Key:
 ! App flow (FSM)
    Handle change request event
    Setup/Teardown on state change
-  VFS
+* VFS
 *  Mount .pak files via PhysFS
 *  Browse using ls/cd/cwd/cat etc in console
   Cache layer
