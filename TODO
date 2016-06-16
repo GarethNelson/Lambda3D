@@ -9,9 +9,9 @@ Key:
 *  CVars
 *   Send events when CVars are changed
    Switch command usage info into a string table (instead of  in cmd_* functions)
-   Dynamically add commands
+*   Dynamically add commands
 *   Move commands into seperate C module
-    Add predefined commands using an init function - same as dynamic commands
+*   Add predefined commands using an init function - same as dynamic commands
    Tab auto complete
 ! App flow (FSM)
    Handle change request event

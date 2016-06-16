@@ -35,7 +35,7 @@
 #include "cons_cvars.h"
 #include "cons_cmds.h"
 
-struct cons_cmd cons_commands[] = {
+static struct cons_cmd builtin_commands[] = {
   {"help", "",&cmd_help},
   {"set",  "",&cmd_set},
   {"mount","",&cmd_mount},
@@ -45,9 +45,25 @@ struct cons_cmd cons_commands[] = {
   {"cat",  "",&cmd_cat}
 };
 
+struct cons_cmd* cons_commands=NULL;
+static unsigned int cmd_count=0;
 
 unsigned int get_cmd_count() {
+  return sizeof(builtin_commands) / sizeof(struct cons_cmd);
   return sizeof(cons_commands) / sizeof(struct cons_cmd);
+}
+
+void add_command(struct cons_cmd cmd) {
+     cmd_count++;
+     cons_commands = realloc((void*)cons_commands,(get_cmd_count()+1)*sizeof(struct cons_cmd));
+     memcpy(&(cons_commands[cmd_count-1]), &cmd, sizeof(struct cons_cmd));
+}
+
+void init_cmd_table() {
+     int i=0;
+     for(i=0; i< (sizeof(builtin_commands)/sizeof(struct cons_cmd)); i++) {
+         add_command(builtin_commands[i]);
+     }
 }
 
 void cmd_cat(int argc, char** argv) {
@@ -277,11 +293,11 @@ void cmd_help(int argc, char** argv) {
      char* help_args[2] = {"help","-h"};
      if(argc==1) {
         console_printf("Following commands are available, type help <cmd> for more info:\n");
-        for(i=0; i< (sizeof(cons_commands)/sizeof(struct cons_cmd)); i++) {
+        for(i=0; i< get_cmd_count(); i++) {
             console_printf(" * %s\n",cons_commands[i].cmd_str);
         }
      } else if(argc==2) {
-        for(i=0; i< (sizeof(cons_commands)/sizeof(struct cons_cmd)); i++) {
+        for(i=0; i< get_cmd_count(); i++) {
             if(strcmp(cons_commands[i].cmd_str,argv[1])==0) {
                cons_commands[i].cmd_func(2,help_args);
             }

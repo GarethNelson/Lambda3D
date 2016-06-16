@@ -42,6 +42,10 @@ struct cons_cmd {
     void  (*cmd_func)(int argc, char** argvv);
 };
 
+struct cons_cmd* cons_commands;
+
 unsigned int get_cmd_count();
+
+void init_cmd_table();
 
 #endif

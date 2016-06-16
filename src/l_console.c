@@ -67,7 +67,7 @@ void console_printf(const char* fmt, ...) {
 }
 
 // TODO: move commands into another file, make dynamic and shit
-extern struct cons_cmd cons_commands[];
+extern struct cons_cmd *cons_commands;
 
 void console_defcmd(int argc, char** argv) {
      int i=0;
@@ -149,7 +149,7 @@ void console_init() {
      
      SDL_LogInfo(SDL_LOG_CATEGORY_SYSTEM,"SDL logging started!");
      console_printf("Lambda console ready\n\n");
-
+     init_cmd_table();
 
 }
 
