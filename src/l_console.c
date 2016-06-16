@@ -68,22 +68,38 @@ void cmd_help(int argc, char** argv);
 void cmd_set(int argc, char** argv);
 void cmd_mount(int argc, char** argv);
 void cmd_ls(int argc, char** argv);
+void cmd_pwd(int argc, char** argv);
 
 char *commands_str[] = {
      "help",
      "set",
      "mount",
      "ls",
+     "pwd",
 };
 
 void (*commands_func[])(int argc, char** argv) = {
      &cmd_help,
      &cmd_set,
      &cmd_mount,
-     &cmd_ls
+     &cmd_ls,
+     &cmd_pwd
 };
 
 // TODO: move commands into another file, make dynamic and shit
+void cmd_pwd(int argc, char** argv) {
+     if(argc==2) {
+        if(strcmp(argv[1],"-h")!=0) {
+           console_printf("Error: pwd command takes no parameters\n");
+        }
+        console_printf("Usage: pwd\n");
+        console_printf("       pwd simply returns the current working directory\n");
+        console_printf("       Note that this is done by printing the cwd CVar, which may be set to something invalid\n");
+        return;
+     }
+     console_printf("%s\n",get_cvar_s("cwd"));
+}
+
 void cmd_ls(int argc, char** argv) {
      char **rc;
      char **i;
