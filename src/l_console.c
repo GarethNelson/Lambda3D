@@ -103,6 +103,7 @@ void cmd_mount(int argc, char** argv) {
                console_printf("         %s - %s\n", (*ar_info)->extension, (*ar_info)->description);
            }
            console_printf("       Please note that .pk3 files are identical to .zip files\n");
+           console_printf("       It is also possible to mount directories as archives\n");
            console_printf("       Type mount without params to see currently mounted archives\n");
            return;
         } else {
