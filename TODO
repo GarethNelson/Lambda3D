@@ -24,6 +24,11 @@ Key:
 * VFS
 *  Mount .pak files via PhysFS
 *  Browse using ls/cd/cwd/cat etc in console
+  Sound system
+   Seperate thread and messages
+   Music track start/stop
+   Sound effects
+    Spatialised sound
   Rendering lib
    Implement basic operations
 !   Texture loading
@@ -45,6 +50,8 @@ Key:
    Add commands to console to query cache contexts
 !  Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
    VFS cache - cache whole files
+   Font cache
+   Sound cache
    OpenGL texture cache - load OpenGL textures here
    Arbitary data cache - pass a pointer and a data size, whole thing copied into cache and stored
   Splash / logo
