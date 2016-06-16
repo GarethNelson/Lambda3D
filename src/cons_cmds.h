@@ -39,7 +39,10 @@ void cmd_cat(int argc, char** argv);
 struct cons_cmd {
     char*   cmd_str;
     char*   help_str;
-    void  (*cmd_func)(int argc, char** argvv);
+    char*   param_list[3];
+    char*   param_desc[3];
+    char*   extra_help[3];
+    void    (*cmd_func)(int argc, char** argvv);
 };
 
 struct cons_cmd* cons_commands;

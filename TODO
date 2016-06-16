@@ -8,7 +8,7 @@ Key:
 *  Basic rendering
 *  CVars
 *   Send events when CVars are changed
-   Switch command usage info into a string table (instead of  in cmd_* functions)
+!  Switch command usage info into a string table (instead of  in cmd_* functions)
 *   Dynamically add commands
 *   Move commands into seperate C module
 *   Add predefined commands using an init function - same as dynamic commands

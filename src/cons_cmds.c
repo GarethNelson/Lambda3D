@@ -36,13 +36,25 @@
 #include "cons_cmds.h"
 
 static struct cons_cmd builtin_commands[] = {
-  {"help", "",&cmd_help},
-  {"set",  "",&cmd_set},
-  {"mount","",&cmd_mount},
-  {"ls",   "",&cmd_ls},
-  {"pwd",  "",&cmd_pwd},
-  {"cd",   "",&cmd_cd},
-  {"cat",  "",&cmd_cat}
+  {"help", "Displays usage information",
+    {"command",NULL,NULL},
+    {"the command to get usage info for",NULL,NULL},
+    {NULL,NULL,NULL},
+    &cmd_help},
+  {"set", "Sets a CVar to a specific value", 
+    {"type","varname","value"},
+    {"one of s,i,f or b",
+     "variable to set",
+     "value to set"},
+    {"Data types supported: string(s), integer(i), float(f), boolean(b)",
+     "For boolean values, valid values are: true, false",
+     "Type set without params to see current CVars"},
+   &cmd_set},
+/*  {"mount","","",&cmd_mount},
+  {"ls",   "","",&cmd_ls},
+  {"pwd",  "","",&cmd_pwd},
+  {"cd",   "","",&cmd_cd},
+  {"cat",  "","",&cmd_cat}*/
 };
 
 struct cons_cmd* cons_commands=NULL;
@@ -289,7 +301,7 @@ void cmd_set(int argc, char** argv) {
 }
 
 void cmd_help(int argc, char** argv) {
-     int i;
+     int i,p;
      char* help_args[2] = {"help","-h"};
      if(argc==1) {
         console_printf("Following commands are available, type help <cmd> for more info:\n");
@@ -299,7 +311,26 @@ void cmd_help(int argc, char** argv) {
      } else if(argc==2) {
         for(i=0; i< get_cmd_count(); i++) {
             if(strcmp(cons_commands[i].cmd_str,argv[1])==0) {
-               cons_commands[i].cmd_func(2,help_args);
+               console_printf("\n %s - %s\n\n",cons_commands[i].cmd_str,cons_commands[i].help_str);
+               console_printf(" Usage: %s ",cons_commands[i].cmd_str);
+               for(p=0; p<3; p++) {
+                  if(cons_commands[i].param_list[p] != NULL) {
+                     console_printf("<%s> ",cons_commands[i].param_list[p]);
+                  }
+               }
+               console_printf("\n");
+               for(p=0; p<3; p++) {
+                  if(cons_commands[i].param_list[p] != NULL) {
+                     console_printf("        <%s> - %s\n",cons_commands[i].param_list[p],cons_commands[i].param_desc[p]);
+                  }
+               }
+               console_printf("\n");
+               for(p=0; p<3; p++) {
+                  if(cons_commands[i].extra_help[p] != NULL) {
+                     console_printf("        %s\n",cons_commands[i].extra_help[p]);
+                  }
+               }
+               console_printf("\n");
             }
         }
      }
