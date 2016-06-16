@@ -33,7 +33,7 @@
 #include <wordexp.h>
 
 #include <SDL.h>
-#include <SDL_ttf.h>
+#include <physfs.h>
 
 #include "l_utils.h"
 #include "v_init.h"
@@ -82,7 +82,28 @@ void (*commands_func[])(int argc, char** argv) = {
 
 // TODO: move commands into another file, make dynamic and shit
 void cmd_mount(int argc, char** argv) {
-     
+     PHYSFS_ArchiveInfo **ar_info;
+     if(argc==1) {
+        char **p;
+        for(p = PHYSFS_getSearchPath(); *p != NULL; p++) {
+            printf("%s on %s\n",*p,PHYSFS_getMountPoint(*p));
+        }
+        PHYSFS_freeList(p);
+        return;
+     }
+     if(argc==2) {
+        if(strcmp(argv[1],"-h")==0) {
+           console_printf("Usage: mount <archive> <mountpoint\n");
+           console_printf("       <archive>     path to an archive file to mount\n");
+           console_printf("       <mountpoint>  where in the VFS to mount it - if not specified, / is default\n");
+           console_printf("       Archives supported:\n");
+           for(ar_info = PHYSFS_supportedArchiveTypes(); *ar_info != NULL; ar_info++) {
+               console_printf("         %s - %s\n", (*ar_info)->extension, (*ar_info)->description);
+           }
+           console_printf("       Please note that .pk3 files are identical to .zip files\n");
+           console_printf("       Type mount without params to see currently mounted archives\n");
+        }
+     }
 }
 
 void cmd_set(int argc, char** argv) {
@@ -106,6 +127,7 @@ void cmd_set(int argc, char** argv) {
         console_printf("       \n");
         console_printf("       Data types supported: string(s), integer(i), float(f), boolean(b)\n");
         console_printf("       For boolean values, valid values are: true, false\n");
+        console_printf("       Type set without params to see current CVars\n");
         return;
      }
      switch(argv[1][0]) {
