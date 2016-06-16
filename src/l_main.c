@@ -51,7 +51,7 @@ void handle_l_event(SDL_Event e) {
           req = ((l_ev_switch_req*)e.user.data2);
           if(req->new_stage != 0) new_stage = req->new_stage;
           new_flags |=  (req->set_flags);
-//          new_flags &= ~(req->unset_flags);
+          new_flags &= ~(req->unset_flags);
           switch_appstage(get_cvar_i("appstage"),new_stage,get_cvar_i("appflags"),new_flags);
         break;
         case L_EV_CVAR_CHANGE:

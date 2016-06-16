@@ -50,6 +50,8 @@ char* stage_name(int stage, int flags) {
       char retval[1024];
       char stage_str[32];
       char flags_str[32];
+      memset((void*)stage_str,0,32);
+      memset((void*)flags_str,0,32);
       switch(stage) {
          case APPSTAGE_STARTUP:
            snprintf(stage_str,32,"STARTUP");
@@ -71,6 +73,7 @@ char* stage_name(int stage, int flags) {
       if((flags & APPFLAGS_MENU)   != 0) strncat(flags_str,"MENU ", 32);
       if((flags & APPFLAGS_DEBUG)  != 0) strncat(flags_str,"DEBUG ",32);
       snprintf(retval,1024,"Stage:%s, Flags:%s",stage_str,flags_str);
+
       return strdup(retval);
 }
 
