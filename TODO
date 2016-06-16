@@ -17,11 +17,25 @@ Key:
    Implement table of states with callbacks
 *  Handle change request event
    Setup/Teardown on state change
-   Implement time stepping
-   Add debug command
+*  Implement time stepping
+*  Add debug command
+   Implement debug overlay
 * VFS
 *  Mount .pak files via PhysFS
 *  Browse using ls/cd/cwd/cat etc in console
+  Rendering lib
+   Implement basic operations
+    2D
+     Text
+      Basic (for debug info)
+      TTF
+     Textured quad
+    3D
+     Camera/view transform
+     Render quad
+     Pre-load geometry
+       Display lists (later VBOs)
+       Allow transforms + nesting
   Cache layer
    Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
    VFS cache - cache whole files

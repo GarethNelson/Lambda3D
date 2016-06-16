@@ -139,7 +139,16 @@ int main(int argc, char** argv) {
     console_runscript("/autoexec.cfg");
 
     int stage, flags;
+    float seconds;
+    float fps;
+    int Frames=0;
+    int T0=0;
+    int last_frame=SDL_GetTicks();
+    int t = SDL_GetTicks();
+    float delta;
     while(running) {
+       delta = t-last_frame;
+       last_frame = t;
        handle_events();
 
        stage = get_cvar_i("appstage");
@@ -153,6 +162,15 @@ int main(int argc, char** argv) {
        console_render();
 
        v_post_render();
+       Frames++; {
+           t = SDL_GetTicks();
+           if(t - T0 >= 5000) {
+              seconds = (t - T0) / 1000.0;
+              fps = Frames / seconds;
+           }
+       }
+       set_cvar_f("fps",fps);
+       set_cvar_f("delta",delta);
     }
     return 0;
 }

@@ -115,6 +115,7 @@ void render_app(int stage, int flags) {
            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,"Invalid app stage %d with flags %d",stage,flags);
         break;
      }
-
+     if((flags & APPFLAGS_DEBUG) != 0) {
+     }
 }
 
