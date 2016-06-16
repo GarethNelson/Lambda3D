@@ -89,7 +89,8 @@ int main(int argc, char* argv[]) {
     }
 
     switch_appstage(0,appstage,0,appflags);
-    
+    set_cvar_s("cwd","/");
+
     while(running) {
        handle_events();
 

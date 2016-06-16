@@ -67,20 +67,26 @@ void console_printf(const char* fmt, ...) {
 void cmd_help(int argc, char** argv);
 void cmd_set(int argc, char** argv);
 void cmd_mount(int argc, char** argv);
+void cmd_ls(int argc, char** argv);
 
 char *commands_str[] = {
      "help",
      "set",
-     "mount"
+     "mount",
+     "ls",
 };
 
 void (*commands_func[])(int argc, char** argv) = {
      &cmd_help,
      &cmd_set,
-     &cmd_mount
+     &cmd_mount,
+     &cmd_ls
 };
 
 // TODO: move commands into another file, make dynamic and shit
+void cmd_ls(int argc, char** argv) {
+}
+
 void cmd_mount(int argc, char** argv) {
      PHYSFS_ArchiveInfo **ar_info;
      int i=0;

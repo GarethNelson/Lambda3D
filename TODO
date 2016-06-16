@@ -8,14 +8,17 @@ Key:
 *  Basic rendering
 *  CVars
 *   Send events when CVars are changed
+   Switch command usage info into a string table (instead of  in cmd_* functions)
    Dynamically add commands
+    Move commands into seperate C module
+    Add predefined commands using an init function - same as dynamic commands
    Tab auto complete
 ! App flow (FSM)
    Handle change request event
    Setup/Teardown on state change
   VFS
-   Mount .pak files via PhysFS
-   Browse using ls/cd/cwd/cat etc in console
+*  Mount .pak files via PhysFS
+!  Browse using ls/cd/cwd/cat etc in console
   Cache layer
    Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
    VFS cache - cache whole files
