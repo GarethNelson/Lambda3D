@@ -40,6 +40,7 @@
 #include "v_init.h"
 #include "oglconsole.h"
 #include "cons_cvars.h"
+#include "cons_cmds.h"
 
 // I am aware the below seems completely pointless, there is reason to the madness
 static int is_active=1;
@@ -321,8 +322,8 @@ void cmd_help(int argc, char** argv) {
      char* help_args[2] = {"help","-h"};
      if(argc==1) {
         console_printf("Following commands are available, type help <cmd> for more info:\n");
-        for(i=0; i< (sizeof(commands_str)/sizeof(char*)); i++) {
-            console_printf(" * %s\n",commands_str[i]);
+        for(i=0; i< (sizeof(cons_commands)/sizeof(struct cons_cmd)); i++) {
+            console_printf(" * %s\n",cons_commands[i].cmd_str);
         }
      } else if(argc==2) {
         for(i=0; i< (sizeof(commands_str)/sizeof(char*)); i++) {
@@ -342,17 +343,17 @@ void console_defcmd(int argc, char** argv) {
         e.type = SDL_QUIT;
         SDL_PushEvent(&e);
      } else {
-        for(i=0; i< (sizeof(commands_str)/sizeof(char*)); i++) {
-          if(strcmp(argv[0],commands_str[i])==0) {
-              commands_func[i](argc, argv);
+        for(i=0; i< (sizeof(cons_commands)/sizeof(struct cons_cmd)); i++) {
+          if(strcmp(argv[0],cons_commands[i].cmd_str)==0) {
+              cons_commands[i].cmd_func(argc, argv);
            }
         }
      }
 }
 
 void console_runcmd(char* cmdline) {
-     fprintf(stderr,"] %s\n",cmdline);
      if(strlen(cmdline)==0) return;
+     fprintf(stderr,"] %s\n",cmdline);
      int i;
      char **argv = NULL;
      int argc;
