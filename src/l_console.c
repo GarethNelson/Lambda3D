@@ -110,6 +110,7 @@ void cmdCB(OGLCONSOLE_Console console, char *cmd) {
 }
 
 char* tabCB(OGLCONSOLE_Console console, char *partial) {
+     return "test";
 }
 
 void console_log_func(void* userdata, int category, SDL_LogPriority priority, const char* message) {

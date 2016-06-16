@@ -745,6 +745,7 @@ void OGLCONSOLE_YankHistory(_OGLCONSOLE_Console *console)
 #define KMOD_CAPITALIZE (KMOD_LSHIFT|KMOD_RSHIFT|KMOD_CAPS)
 int OGLCONSOLE_SDLEvent(SDL_Event *e)
 {
+    char *c,*d;
     /* If the terminal is hidden we only check for show/hide key */
     if (userConsole->visibility < 1)
     {
@@ -779,13 +780,33 @@ int OGLCONSOLE_SDLEvent(SDL_Event *e)
         if (e->key.keysym.sym == KEY_TAB) {
             printf("TAB search %s\n", userConsole->inputLine);
             printf("TAB search result %s\n",userConsole->tabCompleteCallback((void*)userConsole,userConsole->inputLine));
+            char* part=userConsole->tabCompleteCallback((void*)userConsole,userConsole->inputLine);
+            int i=0;
+            for(i=0; i<strlen(part); i++) {
+                c = userConsole->inputLine + userConsole->inputCursorPos;
+                d = userConsole->inputLine + userConsole->inputLineLength + 1;
+
+                /* Slide some of the string to the right */
+                for (; d != c; d--)
+                    *d = *(d-1);
+
+                /* Insert new character */
+                *c = part[i];
+
+                /* Increment input line length counter */
+                userConsole->inputLineLength++;
+
+               /* Advance input cursor position */
+                userConsole->inputCursorPos++;
+
+
+            }
         }
         
         /* TODO: Find out how to handle CAPSLOCK */
         if (e->key.keysym.sym >= ' ' && e->key.keysym.sym <= '~')
         {
             int k = e->key.keysym.sym;
-            char *c, *d;
 
             /* Yank the command history if necessary */
             OGLCONSOLE_YankHistory(userConsole);
