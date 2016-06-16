@@ -4,7 +4,7 @@ Key:
 
 * Basic skeleton SDL2/OpenGL
 ! Console system
-   Scripting from files (autoexec.cfg)
+*  Scripting from files (autoexec.cfg)
 *  Basic rendering
 *  CVars
 *   Send events when CVars are changed

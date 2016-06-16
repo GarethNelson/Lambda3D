@@ -123,7 +123,7 @@ void cmd_cat(int argc, char** argv) {
         console_printf("Error! %s\n",PHYSFS_getLastError());
         return;
      }
-     PHYSFS_sint64 f_size = PHYSFS_fileLength(fd);
+     PHYSFS_uint32 f_size = PHYSFS_fileLength(fd);
      void* f_data = malloc(f_size);
      PHYSFS_read(fd,f_data,f_size,1);
      console_printf("%s\n",(char*)f_data);
@@ -379,6 +379,32 @@ void console_log_func(void* userdata, int category, SDL_LogPriority priority, co
      console_printf("%s\n", message);
 }
 
+void console_runscript(char* filename) {
+     PHYSFS_File* fd = PHYSFS_openRead(filename);
+     if(fd==NULL) {
+        console_printf("SCRIPT %s: Error! %s\n",filename,PHYSFS_getLastError());
+        return;
+     }
+     PHYSFS_uint32 f_size = PHYSFS_fileLength(fd);
+     void* f_data = malloc(f_size);
+     PHYSFS_read(fd,f_data,(PHYSFS_uint32)f_size,1);
+
+     char *cmdline;
+     char *s;
+     char *tofree = s = strdup((char*)f_data);
+     while((cmdline = strsep(&s,"\n")) != NULL) {
+        if(strlen(cmdline)>1) {
+           console_printf("SCRIPT %s: %s\n",filename,cmdline);
+           console_runcmd(cmdline);
+        }
+        
+     }
+     free(tofree);
+     free(f_data);
+     PHYSFS_close(fd);
+ 
+}
+
 void console_init() {
      screen_res res = get_screen_res();
      glViewport( 0, 0, ( GLsizei )res.w, ( GLsizei )res.h );
@@ -389,6 +415,8 @@ void console_init() {
      
      SDL_LogInfo(SDL_LOG_CATEGORY_SYSTEM,"SDL logging started!");
      console_printf("Lambda console ready\n\n");
+
+
 }
 
 void console_render() {
