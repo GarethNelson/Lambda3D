@@ -50,6 +50,8 @@ void default_render() {
 }
 
 struct app_stage_t* app_stage_table=NULL;
+static unsigned int stage_count=0;
+
 static struct app_stage_t app_stages[] = {
   {APPSTAGE_STARTUP,   "Startup",         &default_init,&default_cleanup,&default_update,&default_render},
   {APPSTAGE_SPLASH,    "Splash screen",   &default_init,&default_cleanup,&default_update,&default_render},
@@ -59,10 +61,36 @@ static struct app_stage_t app_stages[] = {
   {APPSTAGE_GAMEOVER,  "Game over screen",&default_init,&default_cleanup,&default_update,&default_render},
 };
 
-void switch_appstage(int old_stage, int new_stage, int old_flags, int new_flags) {
+void add_appstage(struct app_stage_t stage) {
+     stage_count++;
+     app_stage_table = realloc((void*)app_stage_table,stage_count*sizeof(struct app_stage_t));
+     memcpy(&(app_stage_table[stage_count-1]), &stage, sizeof(struct app_stage_t));
+}
+
+void init_appstage_table() {
+     int i=0;
+     for(i=0; i< (sizeof(app_stages)/sizeof(struct app_stage_t)); i++) {
+         add_appstage(app_stages[i]);
+     }
+}
+
+void switch_appstage(int old_stage, int new_stage, int old_flags, int new_flags, void* params) {
      char* old_s=stage_name(old_stage, old_flags);
      char* new_s=stage_name(new_stage, new_flags);
      console_printf("Switching from [%s] to [%s]\n",old_s,new_s);
+     if(old_stage != new_stage) {
+        int i=0;
+        for(i=0; i<stage_count; i++) {
+            if(app_stage_table[i].stage_id==old_stage) {
+               app_stage_table[i].cleanup();
+            }
+        }
+        for(i=0; i<stage_count; i++) {
+            if(app_stage_table[i].stage_id==new_stage) {
+               app_stage_table[i].init(params);
+            }
+        }
+     }
      set_cvar_s("s_stage",new_s);
      set_cvar_i("appstage",new_stage);
      set_cvar_i("appflags",new_flags);

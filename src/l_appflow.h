@@ -54,9 +54,10 @@ struct app_stage_t {
 struct app_stage_t* app_stage_table;
 
 // TODO: add time delta
+void init_appstage_table();
 char* stage_name(int stage, int flags);
-void  switch_appstage(int old_stage, int new_stage, int old_flags, int new_flags); // must be called from l_main only
-                                                                                   // other modules can send events
+void  switch_appstage(int old_stage, int new_stage, int old_flags, int new_flags, void* params); // must be called from l_main only
+                                                                                                 // other modules can send events
 void  update_app(int stage, int flags);
 void  render_app(int stage, int flags);
 

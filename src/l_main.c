@@ -46,13 +46,15 @@ void handle_l_event(SDL_Event e) {
      l_ev_switch_req *req;
      int new_stage=get_cvar_i("appstage");
      int new_flags=get_cvar_i("appflags");
+     void* new_params;
      switch(e.user.code) {
         case L_EV_SWITCH_REQ:
           req = ((l_ev_switch_req*)e.user.data2);
           if(req->new_stage != 0) new_stage = req->new_stage;
-          new_flags |=  (req->set_flags);
-          new_flags &= ~(req->unset_flags);
-          switch_appstage(get_cvar_i("appstage"),new_stage,get_cvar_i("appflags"),new_flags);
+          new_flags  |=  (req->set_flags);
+          new_flags  &= ~(req->unset_flags);
+          new_params  = req->new_stage_params;
+          switch_appstage(get_cvar_i("appstage"),new_stage,get_cvar_i("appflags"),new_flags,new_params);
         break;
         case L_EV_CVAR_CHANGE:
         break;
@@ -133,7 +135,9 @@ int main(int argc, char** argv) {
       }
     }
 
-    switch_appstage(0,APPSTAGE_STARTUP,0,APPFLAGS_NORMAL);
+    init_appstage_table();
+
+    switch_appstage(0,APPSTAGE_STARTUP,0,APPFLAGS_NORMAL,NULL);
     set_cvar_s("cwd","/");
 
     console_runscript("/autoexec.cfg");

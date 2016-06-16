@@ -35,9 +35,10 @@
 
 // pass one of these as a pointer in data2
 typedef struct l_ev_switch_req {
-   int new_stage;   // 0 to keep the current stage and only change flags
-   int set_flags;   // flags to set
-   int unset_flags; // flags to unset
+   int   new_stage;        // 0 to keep the current stage and only change flags
+   int   set_flags;        // flags to set
+   int   unset_flags;      // flags to unset
+   void* new_stage_params; // params for the new stage
 } l_ev_switch_req;
 
 typedef struct l_ev_cvar_change {

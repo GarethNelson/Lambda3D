@@ -100,13 +100,12 @@ struct cons_cmd* cons_commands=NULL;
 static unsigned int cmd_count=0;
 
 unsigned int get_cmd_count() {
-  return sizeof(builtin_commands) / sizeof(struct cons_cmd);
-  return sizeof(cons_commands) / sizeof(struct cons_cmd);
+     return cmd_count;
 }
 
 void add_command(struct cons_cmd cmd) {
      cmd_count++;
-     cons_commands = realloc((void*)cons_commands,(get_cmd_count()+1)*sizeof(struct cons_cmd));
+     cons_commands = realloc((void*)cons_commands,(get_cmd_count())*sizeof(struct cons_cmd));
      memcpy(&(cons_commands[cmd_count-1]), &cmd, sizeof(struct cons_cmd));
 }
 

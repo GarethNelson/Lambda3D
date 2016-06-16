@@ -13,14 +13,14 @@ Key:
 *   Move commands into seperate C module
 *   Add predefined commands using an init function - same as dynamic commands
 *  Tab auto complete
-! App flow (FSM)
-!  Implement table of states with callbacks
-    Dynamically loaded
+* App flow (FSM)
+*  Implement table of states with callbacks
+*   Dynamically loaded
 *  Handle change request event
-   Setup/Teardown on state change
+*  Setup/Teardown on state change
 *  Implement time stepping
 *  Add debug command
-   Implement debug overlay
+  Implement debug overlay
 * VFS
 *  Mount .pak files via PhysFS
 *  Browse using ls/cd/cwd/cat etc in console
