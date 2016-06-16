@@ -83,12 +83,14 @@ void (*commands_func[])(int argc, char** argv) = {
 // TODO: move commands into another file, make dynamic and shit
 void cmd_mount(int argc, char** argv) {
      PHYSFS_ArchiveInfo **ar_info;
+     int i=0;
      if(argc==1) {
         char **p;
         for(p = PHYSFS_getSearchPath(); *p != NULL; p++) {
-            printf("%s on %s\n",*p,PHYSFS_getMountPoint(*p));
+            console_printf("%s on %s\n",*p,PHYSFS_getMountPoint(*p));
+            i++; // needed for bugfix in PHYSFS_freeList
         }
-        PHYSFS_freeList(p);
+        if(i>1) PHYSFS_freeList(p);
         return;
      }
      if(argc==2) {
@@ -97,13 +99,30 @@ void cmd_mount(int argc, char** argv) {
            console_printf("       <archive>     path to an archive file to mount\n");
            console_printf("       <mountpoint>  where in the VFS to mount it - if not specified, / is default\n");
            console_printf("       Archives supported:\n");
-           for(ar_info = PHYSFS_supportedArchiveTypes(); *ar_info != NULL; ar_info++) {
+           for(ar_info = (PHYSFS_ArchiveInfo**)PHYSFS_supportedArchiveTypes(); *ar_info != NULL; ar_info++) {
                console_printf("         %s - %s\n", (*ar_info)->extension, (*ar_info)->description);
            }
            console_printf("       Please note that .pk3 files are identical to .zip files\n");
            console_printf("       Type mount without params to see currently mounted archives\n");
+           return;
+        } else {
+           int retval=0;
+           retval = PHYSFS_mount((const char*)argv[1],"",0);
+           if(retval==0) {
+              console_printf("Error mounting: %s\n",PHYSFS_getLastError());
+              return;
+           }
         }
-     }
+        return;
+    }
+    if(argc==3) {
+       int retval=0;
+       retval = PHYSFS_mount((const char*)argv[1],argv[2],0);
+       if(retval==0) {
+          console_printf("Error mounting: %s\n",PHYSFS_getLastError());
+          return;
+       }
+    }
 }
 
 void cmd_set(int argc, char** argv) {
