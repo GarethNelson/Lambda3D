@@ -64,6 +64,19 @@ void console_printf(const char* fmt, ...) {
      fprintf(stderr,"%s",buf);
 }
 
+void cmd_help(int argc, char** argv);
+void cmd_set(int argc, char** argv);
+
+char *commands_str[] = {
+     "help",
+     "set"
+};
+
+void (*commands_func[])(int argc, char** argv) = {
+     &cmd_help,
+     &cmd_set
+};
+
 // TODO: move commands into another file, make dynamic and shit
 void cmd_set(int argc, char** argv) {
      if(argc==1) {
@@ -71,7 +84,12 @@ void cmd_set(int argc, char** argv) {
         return;
      }
      if(argc != 4) {
-        console_printf("Error: insufficient parameters to set command\n");
+        if(argc==1) { 
+          if(strcmp(argv[1],"-h")==0) {
+          } else {
+            console_printf("Error: insufficient parameters to set command\n");
+          }
+        }
         console_printf("Usage: set <type> <varname> <value>\n");
         console_printf("       <type>      one of s,i,f or b\n");
         console_printf("       <varname>   variable name to set\n");
@@ -105,13 +123,24 @@ void cmd_set(int argc, char** argv) {
      }
 }
 
-char *commands_str[] = {
-     "set"
-};
+void cmd_help(int argc, char** argv) {
+     int i;
+     char* help_args[2] = {"help","-h"};
+     if(argc==1) {
+        console_printf("Following commands are available, type help <cmd> for more info:\n");
+        for(i=0; i< (sizeof(commands_str)/sizeof(char*)); i++) {
+            console_printf(" * %s\n",commands_str[i]);
+        }
+     } else if(argc==2) {
+        for(i=0; i< (sizeof(commands_str)/sizeof(char*)); i++) {
+            if(strcmp(commands_str[i],argv[1])==0) {
+               commands_func[i](2,help_args);
+            }
+        }
+     }
+}
 
-void (*commands_func[])(int argc, char** argv) = {
-     &cmd_set
-};
+
 
 void console_defcmd(int argc, char** argv) {
      int i=0;
