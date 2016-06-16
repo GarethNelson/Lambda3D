@@ -41,8 +41,9 @@ Key:
      Pre-load geometry
        Display lists (later VBOs)
        Allow transforms + nesting
-  Cache layer
-   Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
+! Cache layer
+   Add commands to console to query cache contexts
+!  Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
    VFS cache - cache whole files
    OpenGL texture cache - load OpenGL textures here
    Arbitary data cache - pass a pointer and a data size, whole thing copied into cache and stored
