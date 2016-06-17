@@ -38,6 +38,7 @@ struct cache_context_t* global_ctx=NULL;
 
 void cmd_lscachectx(int argc, char** argv);
 void cmd_evictcachectx(int argc, char** argv);
+void cmd_evict(int argc, char** argv);
 
 static struct cons_cmd cache_commands[] = {
   {"lscachectx","Lists cache contexts or the contents of a particular cache context",
@@ -54,11 +55,38 @@ static struct cons_cmd cache_commands[] = {
      "You have been warned!",
      NULL},
     &cmd_evictcachectx},
+  {"evict","Evicts a single entry from a cache context",
+   {"context",
+    "filename",
+    NULL},
+   {"the context to evict from",
+    "the filename of the entry to evict",
+    NULL},
+   {"Note that evicting textures from cache can cause rendering glitches",
+    "Please also note that evicting NULL is not supported - NULL is required for implementation reasons",
+    NULL},
+   &cmd_evict},
 };
+
+void cmd_evict(int argc, char** argv) {
+     if(argc==3) {
+       struct cache_context_t *ctx       = cache_ctx(argv[1]);
+       char*  filename                   = argv[2];
+       if(strcmp(argv[2],"NULL")==0) {
+          console_printf("Error! Can not evict NULL\n");
+          return;
+       }
+       evict_cache_entry(&ctx,filename);
+     } else {
+       console_printf("Error! insufficient parameters to evict command\n");
+     }
+}
 
 void cmd_evictcachectx(int argc, char** argv) {
      if(argc==2) {
         evict_cache_ctx(argv[1]);
+     } else {
+        console_printf("Error! insufficient parameters to evictcachectx command\n");
      }
 }
 
@@ -71,12 +99,17 @@ void cmd_lscachectx(int argc, char** argv) {
        }
        return;
     } else if(argc==2) {
+       unsigned int total_size=0;
+       unsigned int total_items=0;
        console_printf("Dumping cache context %s:\n", argv[1]);
        struct cache_context_t *dump_ctx = cache_ctx(argv[1]);
        struct cache_context_t *entry;
        for(entry=dump_ctx; entry != NULL; entry=entry->hh.next) {
            console_printf(" %s %d %d\n",entry->filename,entry->cache_type,entry->data_size);
+           total_items++;
+           total_size+= entry->data_size;
        }
+       console_printf("%d items, total of %d bytes\n",total_items,total_size);
        return;
     } else {
        console_printf("Error! invalid parameters to lscachectx command\n");
