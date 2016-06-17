@@ -31,9 +31,10 @@
 
 #include <uthash.h>
 
-#define CACHE_TYPE_VFS 1 // whole files from the VFS
-#define CACHE_TYPE_GL  2 // OpenGL textures
-#define CACHE_TYPE_OBJ 3 // arbitary objects
+#define CACHE_TYPE_NULL  0 // there's nothing here!
+#define CACHE_TYPE_VFS   1 // whole files from the VFS
+#define CACHE_TYPE_GL    2 // OpenGL textures
+#define CACHE_TYPE_OBJ   3 // arbitary objects
 
 // each cache context is just a hashtable
 struct cache_context_t {
@@ -47,7 +48,7 @@ struct cache_context_t {
 
 // a hashtable that stores all contexts
 struct cache_contexts_table_t {
-   struct cache_context_t **ctx;       // the cache_context_t hashtable
+   struct cache_context_t *ctx;       // the cache_context_t hashtable
    char*             ctx_desc;  // human-readable description of this hash context
    UT_hash_handle hh;
 };
@@ -56,11 +57,8 @@ void init_cache();
 
 // all functions return NULL on error (including not found)
 
-// create a context, register it with the contexts table and return a uthash-compatible pointer
-struct cache_context_t** create_cache_ctx(char* name);
-
 // try and get the specified context (name==ctx_desc), if not found then create it
-struct cache_context_t** cache_ctx(char* name);
+struct cache_context_t* cache_ctx(char* name);
 
 // evict a cache context, wiping all objects cached and wiping the context itself from the main table
 void evict_cache_ctx(char* name);

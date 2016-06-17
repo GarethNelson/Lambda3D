@@ -36,29 +36,60 @@ struct cache_context_t** global_ctx=NULL;
 
 void init_cache() {
      SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Creating global cache context");
-     global_ctx = create_cache_ctx("GLOBAL");
+     global_ctx = cache_ctx("GLOBAL");
 }
 
-struct cache_context_t** create_cache_ctx(char* name) {
+struct cache_context_t* cache_ctx(char* name) {
      struct cache_contexts_table_t *ctx=NULL;
      HASH_FIND_STR(cache_ctx_table, name, ctx);
      if(ctx==NULL) {
         SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Cache context %s not found, creating",name);
+        
+ 
+
         ctx = (struct cache_contexts_table_t*)malloc(sizeof(struct cache_contexts_table_t));
         ctx->ctx = NULL;
         ctx->ctx_desc = strdup(name);
         HASH_ADD_STR(cache_ctx_table,ctx_desc,ctx);
-     }
-     return ctx;
-}
 
-struct cache_context_t** cache_ctx(char* name) {
+        struct cache_context_t *null_entry = (struct cache_context_t*)malloc(sizeof(struct cache_context_t));
+        null_entry->cache_type = CACHE_TYPE_NULL;
+        null_entry->filename   = strdup("NULL");
+        null_entry->data_size  = 5;
+        null_entry->data       = (void*)strdup("NULL");
+        
+        HASH_ADD_STR(ctx->ctx,filename,null_entry);
+     }
+     return ctx->ctx;
 }
 
 void evict_cache_ctx(char* name) {
+     SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Evicting cache context %s",name);
+     struct cache_context_t *ctx = cache_ctx(name);
+     struct cache_context_t *s, *tmp;
+     HASH_ITER(hh, ctx, s, tmp) {
+         SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Evicting %s from context %s",s->filename,name);
+         evict_cache_entry(&ctx,s->filename);
+     }
+     struct cache_contexts_table_t *ctx_entry=NULL;
+     HASH_FIND_STR(cache_ctx_table, name, ctx_entry);
+     SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Removing context %s from table",name);
+     HASH_DEL(cache_ctx_table,ctx_entry);
+     free(ctx_entry);
 }
 
 void evict_cache_entry(struct cache_context_t** ctx, char* filename) {
+     SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Evicting %s from cache",filename);
+     struct cache_context_t *entry=NULL;
+     HASH_FIND_STR(*ctx,filename,entry);
+     if(entry==NULL) {
+        SDL_LogError(SDL_LOG_CATEGORY_SYSTEM,"%s already evicted from context!",filename);
+     } else {
+       HASH_DEL(*ctx,entry);
+       free(entry->filename);
+       free(entry->data);
+       free(entry);
+     }
 }
 
 struct cache_context_t* cache_vfs_file(struct cache_context_t** ctx, char* filename) {
