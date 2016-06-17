@@ -47,7 +47,7 @@ Key:
        Display lists (later VBOs)
        Allow transforms + nesting
 ! Cache layer
-   Add commands to console to query cache contexts
+!  Add commands to console to query cache contexts
 !  Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
    VFS cache - cache whole files
    Font cache

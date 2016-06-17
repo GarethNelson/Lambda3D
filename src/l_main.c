@@ -139,7 +139,6 @@ int main(int argc, char** argv) {
 
     init_cache();
     init_appstage_table();
-    evict_cache_ctx("GLOBAL");
 
     switch_appstage(0,APPSTAGE_STARTUP,0,APPFLAGS_NORMAL,NULL);
     set_cvar_s("cwd","/");

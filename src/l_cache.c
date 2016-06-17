@@ -30,13 +30,40 @@
 #include <SDL.h>
 
 #include "l_cache.h"
+#include "l_console.h"
+#include "cons_cmds.h"
 
 struct cache_contexts_table_t* cache_ctx_table=NULL;
 struct cache_context_t** global_ctx=NULL;
 
+void cmd_lscachectx(int argc, char** argv);
+
+static struct cons_cmd cache_commands[] = {
+  {"lscachectx","Lists cache contexts or the contents of a particular cache context",
+    {"context",NULL,NULL},
+    {"the context to list, optional argument",NULL,NULL},
+    {"If no parameters are supplied, all cache contexts are listed",NULL,NULL},
+    &cmd_lscachectx},
+};
+
+void cmd_lscachectx(int argc, char** argv) {
+    if(argc==1) {
+       console_printf("Currently registered cache contexts:\n");
+       struct cache_contexts_table_t *ctx;
+       for(ctx=cache_ctx_table; ctx != NULL; ctx=ctx->hh.next) {
+           console_printf(" %s\n",ctx->ctx_desc);
+       }
+    }
+}
+
 void init_cache() {
      SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Creating global cache context");
      global_ctx = cache_ctx("GLOBAL");
+     SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Adding cache commands to console");
+     int i=0;
+     for(i=0; i < (sizeof(cache_commands)/sizeof(struct cons_cmd)); i++) {
+         add_command(cache_commands[i]);
+     }
 }
 
 struct cache_context_t* cache_ctx(char* name) {
