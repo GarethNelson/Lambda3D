@@ -47,40 +47,42 @@ struct cache_context_t {
 
 // a hashtable that stores all contexts
 struct cache_contexts_table_t {
-   cache_context_t **ctx;       // the cache_context_t hashtable
+   struct cache_context_t **ctx;       // the cache_context_t hashtable
    char*             ctx_desc;  // human-readable description of this hash context
    UT_hash_handle hh;
 };
 
+void init_cache();
+
 // all functions return NULL on error (including not found)
 
 // create a context, register it with the contexts table and return a uthash-compatible pointer
-cache_context_t** create_cache_ctx(char* name);
+struct cache_context_t** create_cache_ctx(char* name);
 
 // try and get the specified context (name==ctx_desc), if not found then create it
-cache_context_t** cache_ctx(char* name);
+struct cache_context_t** cache_ctx(char* name);
 
 // evict a cache context, wiping all objects cached and wiping the context itself from the main table
 void evict_cache_ctx(char* name);
 
 // evict a single cache entry
-void evict_cache_entry(cache_context_t** ctx, char* filename);
+void evict_cache_entry(struct cache_context_t** ctx, char* filename);
 
 // cache a file from the VFS and return a pointer to the hashtable entry
-cache_context_t* cache_vfs_file(cache_context_t** ctx, char* filename);
+struct cache_context_t* cache_vfs_file(struct cache_context_t** ctx, char* filename);
 
 // cache an OpenGL texture from the VFS and return a pointer to the hashtable entry
-cache_context_t* cache_gl_texture(cache_context_t** ctx, char* filename);
+struct cache_context_t* cache_gl_texture(struct cache_context_t** ctx, char* filename);
 
 // If file is in cache, return the entry, otherwise cache it and then return the entry
-cache_context_t* cached_file(cache_context_t** ctx, char* filename);
+struct cache_context_t* cached_file(struct cache_context_t** ctx, char* filename);
 
 // If OpenGL texture of specified name is in cache, return entry, otherwise cache it and then return the entry
-cache_context_t* cached_texture(cache_context_t** ctx, char* filename);
+struct cache_context_t* cached_texture(struct cache_context_t** ctx, char* filename);
 
 // If object with specified filename is in cache, return entry, otherwise return NULL
 // Filename is used here as a key, need not be a real VFS path
-cache_context_t* cached_obj(cache_context_t** ctx, char* filename);
+struct cache_context_t* cached_obj(struct cache_context_t** ctx, char* filename);
 
 
 #endif

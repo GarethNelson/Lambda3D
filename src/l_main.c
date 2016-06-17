@@ -37,6 +37,7 @@
 #include "l_console.h"
 #include "l_events.h"
 #include "l_appflow.h"
+#include "l_cache.h"
 #include "r_2d.h"
 #include "cons_cvars.h"
 #include "oglconsole.h"
@@ -136,6 +137,7 @@ int main(int argc, char** argv) {
       }
     }
 
+    init_cache();
     init_appstage_table();
 
     switch_appstage(0,APPSTAGE_STARTUP,0,APPFLAGS_NORMAL,NULL);
