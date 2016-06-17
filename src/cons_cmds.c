@@ -48,7 +48,7 @@ static struct cons_cmd builtin_commands[] = {
     {NULL,NULL,NULL},
     {"The debug overlay displays information such as FPS etc onscreen after rendering",NULL,NULL},
   &cmd_debug},
-  {"set", "Sets a CVar to a specific value", 
+  {"set", "Sets a CVar to a specific value or displays CVars", 
     {"type","varname","value"},
     {"one of s,i,f or b",
      "variable to set",
@@ -299,7 +299,7 @@ void cmd_help(int argc, char** argv) {
      if(argc==1) {
         console_printf("Following commands are available, type help <cmd> for more info:\n");
         for(i=0; i< get_cmd_count(); i++) {
-            console_printf(" * %s\n",cons_commands[i].cmd_str);
+            console_printf(" * %s - %s\n",cons_commands[i].cmd_str,cons_commands[i].help_str);
         }
      } else if(argc==2) {
         for(i=0; i< get_cmd_count(); i++) {
