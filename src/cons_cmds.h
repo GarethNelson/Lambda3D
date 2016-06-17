@@ -50,6 +50,7 @@ struct cons_cmd* cons_commands;
 
 unsigned int get_cmd_count();
 
+void add_command(struct cons_cmd cmd);
 void init_cmd_table();
 
 #endif

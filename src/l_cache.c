@@ -34,17 +34,33 @@
 #include "cons_cmds.h"
 
 struct cache_contexts_table_t* cache_ctx_table=NULL;
-struct cache_context_t** global_ctx=NULL;
+struct cache_context_t* global_ctx=NULL;
 
 void cmd_lscachectx(int argc, char** argv);
+void cmd_evictcachectx(int argc, char** argv);
 
 static struct cons_cmd cache_commands[] = {
   {"lscachectx","Lists cache contexts or the contents of a particular cache context",
     {"context",NULL,NULL},
     {"the context to list, optional argument",NULL,NULL},
-    {"If no parameters are supplied, all cache contexts are listed",NULL,NULL},
+    {"If no parameters are supplied, all cache contexts are listed",
+     "Please note that if the context does not exist, it will be created",
+     "When listing a cache context's contents, the output columns will be: filename, cache type, size"},
     &cmd_lscachectx},
+  {"evictcachectx","Evicts a cache context - this wipes it completely and deregisters it",
+    {"context",NULL,NULL},
+    {"the context to evict",NULL,NULL},
+    {"Note that if the context is currently in use by the engine, this might cause a segfault",
+     "You have been warned!",
+     NULL},
+    &cmd_evictcachectx},
 };
+
+void cmd_evictcachectx(int argc, char** argv) {
+     if(argc==2) {
+        evict_cache_ctx(argv[1]);
+     }
+}
 
 void cmd_lscachectx(int argc, char** argv) {
     if(argc==1) {
@@ -53,6 +69,17 @@ void cmd_lscachectx(int argc, char** argv) {
        for(ctx=cache_ctx_table; ctx != NULL; ctx=ctx->hh.next) {
            console_printf(" %s\n",ctx->ctx_desc);
        }
+       return;
+    } else if(argc==2) {
+       console_printf("Dumping cache context %s:\n", argv[1]);
+       struct cache_context_t *dump_ctx = cache_ctx(argv[1]);
+       struct cache_context_t *entry;
+       for(entry=dump_ctx; entry != NULL; entry=entry->hh.next) {
+           console_printf(" %s %d %d\n",entry->filename,entry->cache_type,entry->data_size);
+       }
+       return;
+    } else {
+       console_printf("Error! invalid parameters to lscachectx command\n");
     }
 }
 
