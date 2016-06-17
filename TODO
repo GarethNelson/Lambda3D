@@ -48,8 +48,8 @@ Key:
        Allow transforms + nesting
 ! Cache layer
 !  Add commands to console to query cache contexts
-!  Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
-   VFS cache - cache whole files
+*  Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
+*  VFS cache - cache whole files
    Font cache
    Sound cache
    OpenGL texture cache - load OpenGL textures here

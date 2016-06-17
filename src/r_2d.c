@@ -35,6 +35,7 @@
 #include <oglconsole.h>
 
 #include "l_utils.h"
+#include "l_cache.h"
 
 #ifdef __MACH__
 #include <OpenGL/gl.h>
@@ -76,23 +77,16 @@ void draw_debug_text(char* text, double x, double y) {
      glPopMatrix();
 }
 
-int load_gl_texture_file(char* vfs_filename) {
-    SDL_LogInfo(SDL_LOG_CATEGORY_RENDER,"Loading texture %s",vfs_filename);
-
-    PHYSFS_File* fd = PHYSFS_openRead(vfs_filename);
-    if(fd==NULL) {
-       SDL_LogError(SDL_LOG_CATEGORY_RENDER,"Error loading texture %s",vfs_filename);
+int load_gl_texture_file(char* cache_ctx_name, char* vfs_filename) {
+    SDL_LogInfo(SDL_LOG_CATEGORY_RENDER,"Loading texture %s into context %s",vfs_filename,cache_ctx_name);
+    struct cache_context_t *ctx     = cache_ctx(cache_ctx_name);
+    struct cache_context_t *tex_ctx = cache_gl_texture(&ctx,vfs_filename);
+    if(tex_ctx == NULL) {
+       SDL_LogError(SDL_LOG_CATEGORY_RENDER,"Could not load texture %s",vfs_filename);
        return -1;
     }
-    PHYSFS_uint32 tex_size = PHYSFS_fileLength(fd);
-    void* tex_buf = malloc(tex_size);
-    PHYSFS_read(fd,tex_buf,(PHYSFS_uint32)tex_size,1);
-    PHYSFS_close(fd);
-  
-    int tex_id = SOIL_load_OGL_texture_from_memory((const unsigned char*)tex_buf,tex_size,SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID,0);
-    free(tex_buf);
-    SDL_LogVerbose(SDL_LOG_CATEGORY_RENDER,"Loaded texture %s with OpenGL ID %d",vfs_filename,tex_id);
-    return tex_id;
+    SDL_LogVerbose(SDL_LOG_CATEGORY_RENDER,"Loaded texture %s with OpenGL ID %d",vfs_filename,tex_ctx->gl_tex_id);
+    return tex_ctx->gl_tex_id;
 }
 
 

@@ -34,7 +34,7 @@ void enter_2d();
 // simple wrapper around OGLCONSOLE_DrawString
 void draw_debug_text(char* text, double x, double y);
 
-int load_gl_texture_file(char* vfs_filename);
+int load_gl_texture_file(char* cache_ctx_name, char* vfs_filename);
 
 #endif
 

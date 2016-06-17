@@ -34,6 +34,13 @@
 #include <uthash.h>
 #include <SDL.h>
 #include <physfs.h>
+#include <SOIL.h>
+
+#ifdef __MACH__
+#include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 
 #include "l_cache.h"
 #include "l_console.h"
@@ -213,6 +220,10 @@ void evict_cache_entry(struct cache_context_t** ctx, char* filename) {
         SDL_LogError(SDL_LOG_CATEGORY_SYSTEM,"%s already evicted from context!",filename);
      } else {
        HASH_DEL(*ctx,entry);
+       if(entry->cache_type == CACHE_TYPE_GL) {
+          SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Unloading evicted OpenGL texture %d",entry->gl_tex_id);
+          glDeleteTextures(1, &(entry->gl_tex_id));
+       }
        free(entry->filename);
        free(entry->data);
        free(entry);
@@ -246,6 +257,31 @@ struct cache_context_t* cache_vfs_file(struct cache_context_t** ctx, char* filen
 }
 
 struct cache_context_t* cache_gl_texture(struct cache_context_t** ctx, char* filename) {
+     SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Caching file %s as OpenGL texture",filename);
+     if(PHYSFS_exists((const char*)filename)==0) {
+        SDL_LogError(SDL_LOG_CATEGORY_SYSTEM,"%s does not exist!",filename);
+        return NULL;
+     }
+     PHYSFS_File* fd = PHYSFS_openRead(filename);
+     if(fd==NULL) {
+        SDL_LogError(SDL_LOG_CATEGORY_SYSTEM,"error opening %s: %s",filename,PHYSFS_getLastError());
+        return NULL;
+     }
+     PHYSFS_uint32 f_size = PHYSFS_fileLength(fd);
+     void* f_data         = malloc(f_size);
+     PHYSFS_read(fd,f_data,(PHYSFS_uint32)f_size,1);
+     PHYSFS_close(fd);
+
+     struct cache_context_t *entry = (struct cache_context_t*)malloc(sizeof(struct cache_context_t));
+     entry->cache_type = CACHE_TYPE_GL;
+     entry->filename   = strdup(filename);
+     entry->data_size  = f_size;
+     entry->data       = f_data;
+     entry->gl_tex_id  = SOIL_load_OGL_texture_from_memory((const unsigned char*)f_data,f_size,SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID,0);
+
+     HASH_ADD_STR(*ctx,filename,entry);
+     SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Loaded %s into texture cache",filename);
+
 }
 
 struct cache_context_t* cached_file(struct cache_context_t** ctx, char* filename) {
