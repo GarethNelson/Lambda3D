@@ -26,11 +26,18 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <limits.h>
+
 #include <uthash.h>
 #include <SDL.h>
+#include <physfs.h>
 
 #include "l_cache.h"
 #include "l_console.h"
+#include "cons_cvars.h"
 #include "cons_cmds.h"
 
 struct cache_contexts_table_t* cache_ctx_table=NULL;
@@ -39,6 +46,7 @@ struct cache_context_t* global_ctx=NULL;
 void cmd_lscachectx(int argc, char** argv);
 void cmd_evictcachectx(int argc, char** argv);
 void cmd_evict(int argc, char** argv);
+void cmd_cacheload(int argc, char** argv);
 
 static struct cons_cmd cache_commands[] = {
   {"lscachectx","Lists cache contexts or the contents of a particular cache context",
@@ -66,7 +74,39 @@ static struct cons_cmd cache_commands[] = {
     "Please also note that evicting NULL is not supported - NULL is required for implementation reasons",
     NULL},
    &cmd_evict},
+  {"cacheload","Loads a file from the VFS into a cache context",
+   {"context",
+    "filename",
+    NULL},
+   {"the context to load into",
+    "the filename of the file to load - may be a relative path",
+    NULL},
+   {"Please note that you can not overwrite an existing entry without first evicting it",
+    NULL,
+    NULL},
+   &cmd_cacheload},
 };
+
+void cmd_cacheload(int argc, char** argv) {
+     if(argc==3) {
+       struct cache_context_t *ctx = cache_ctx(argv[1]);
+       char*  filename             = argv[2];
+       char*  cwd                  = get_cvar_s("cwd");
+       char   filepath[PATH_MAX];
+       if(filename[0]=='/') {
+          snprintf(filepath,PATH_MAX-1,"%s",filename);
+       } else {
+          if(cwd[strlen(cwd)-1]=='/') {
+             snprintf(filepath,PATH_MAX-1,"%s%s",cwd,filename);
+          } else {
+             snprintf(filepath,PATH_MAX-1,"%s/%s",cwd,filename);
+          }
+       }
+       cache_vfs_file(&ctx,filepath);
+     } else {
+       console_printf("Error! insufficient parameters to cacheload command\n");
+     }
+}
 
 void cmd_evict(int argc, char** argv) {
      if(argc==3) {
@@ -180,6 +220,29 @@ void evict_cache_entry(struct cache_context_t** ctx, char* filename) {
 }
 
 struct cache_context_t* cache_vfs_file(struct cache_context_t** ctx, char* filename) {
+     SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Caching file %s as VFS object",filename);
+     if(PHYSFS_exists((const char*)filename)==0) {
+        SDL_LogError(SDL_LOG_CATEGORY_SYSTEM,"%s does not exist!",filename);
+        return NULL;
+     }
+     PHYSFS_File* fd = PHYSFS_openRead(filename);
+     if(fd==NULL) {
+        SDL_LogError(SDL_LOG_CATEGORY_SYSTEM,"error opening %s: %s",filename,PHYSFS_getLastError());
+        return NULL;
+     }
+     PHYSFS_uint32 f_size = PHYSFS_fileLength(fd);
+     void* f_data         = malloc(f_size);
+     PHYSFS_read(fd,f_data,(PHYSFS_uint32)f_size,1);
+     PHYSFS_close(fd);
+
+     struct cache_context_t *entry = (struct cache_context_t*)malloc(sizeof(struct cache_context_t));
+     entry->cache_type = CACHE_TYPE_VFS;
+     entry->filename   = strdup(filename);
+     entry->data_size  = f_size;
+     entry->data       = f_data;
+     HASH_ADD_STR(*ctx,filename,entry);
+     SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Loaded %s into VFS cache",filename);
+     return entry;
 }
 
 struct cache_context_t* cache_gl_texture(struct cache_context_t** ctx, char* filename) {
