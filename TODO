@@ -33,7 +33,7 @@ Key:
    Implement basic operations
 !   Texture loading
 *    Load from VFS
-     Switch to cache layer
+*    Switch to cache layer
      Load from SDL surface
     2D
 !    Text
@@ -47,12 +47,12 @@ Key:
        Display lists (later VBOs)
        Allow transforms + nesting
 ! Cache layer
-!  Add commands to console to query cache contexts
+*  Add commands to console to query cache contexts
 *  Cache contexts - create at start of level (or whatever else), then destroy all cached objects together
 *  VFS cache - cache whole files
    Font cache
    Sound cache
-   OpenGL texture cache - load OpenGL textures here
+*  OpenGL texture cache - load OpenGL textures here
    Arbitary data cache - pass a pointer and a data size, whole thing copied into cache and stored
   Splash / logo
   Loading screen
