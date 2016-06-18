@@ -1,6 +1,36 @@
+//-----------------------------------------------------------------------------
+//
+// $Id:$
+//
+// Copyright (C) 2016 by Gareth Nelson (gareth@garethnelson.com)
+//
+// This file is part of the Lambda engine.
+//
+// The Lambda engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+//
+// The Lambda engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+//
+// $Log:$
+//
+// DESCRIPTION:
+//     The splash screen and logo
+//
+//-----------------------------------------------------------------------------
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
 #if defined(__APPLE__)
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -8,18 +38,19 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif
+
+#include "l_utils.h"
 #include <SDL.h>
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
 #define SCREEN_BPP 24
 
-SDL_Surface *surface;
-float yrot=0.0f;
-float xrot=90.0f;
-int draw_text=0;
-int fade_out=0;
-float fade_alpha=0.0f;
+static float yrot=0.0f;
+static float  xrot=90.0f;
+static int draw_text=0;
+static int fade_out=0;
+static float fade_alpha=0.0f;
 
 void l_splash_logo_update() {
      yrot+=2.0f;
@@ -36,14 +67,14 @@ void l_splash_logo_update() {
      }
 }
 
-GLuint lambda_polygons=0;
-GLuint lambda_outline=0;
-GLuint lambda_faces_quads=0;
-GLuint lambda_faces_lines=0;
-GLuint lambda_grid=0;
-GLuint lambda_text=0;
+static GLuint lambda_polygons=0;
+static GLuint lambda_outline=0;
+static GLuint lambda_faces_quads=0;
+static GLuint lambda_faces_lines=0;
+static GLuint lambda_grid=0;
+static GLuint lambda_text=0;
 
-GLuint grid_list() {
+static GLuint grid_list() {
        int i=0;
        GLuint retval=glGenLists(1);
        glNewList(retval,GL_COMPILE);
@@ -59,7 +90,7 @@ GLuint grid_list() {
        return retval;
 }
 
-GLuint text_list() {
+static GLuint text_list() {
        GLuint retval=glGenLists(1);
        glNewList(retval,GL_COMPILE);
        glBegin(GL_QUADS);
@@ -217,7 +248,7 @@ GLuint text_list() {
        return retval;
 }
 
-GLuint faces_list(GLuint mode) {
+static GLuint faces_list(GLuint mode) {
        GLuint retval=glGenLists(1);
        glNewList(retval,GL_COMPILE);
        glBegin(mode);
@@ -286,7 +317,7 @@ GLuint faces_list(GLuint mode) {
        return retval;
 }
 
-GLuint outline_list() {
+static GLuint outline_list() {
        GLuint retval=glGenLists(1);
        GLuint shape=glGenLists(1);
        glNewList(shape,GL_COMPILE);
@@ -316,7 +347,7 @@ GLuint outline_list() {
      return retval;
 }
 
-GLuint polygon_list() {
+static GLuint polygon_list() {
        GLuint retval=glGenLists(1);
        glNewList(retval, GL_COMPILE);
        glBegin(GL_QUADS);
@@ -365,10 +396,11 @@ GLuint polygon_list() {
 }
 
 
-void l_splash_logo_init_scene() {
+static void l_splash_logo_init_scene() {
+       screen_res res = get_screen_res();
      glMatrixMode(GL_PROJECTION);
      glLoadIdentity();
-     glOrtho(0.0,SCREEN_WIDTH,SCREEN_HEIGHT,0.0,1.0,-1.0);
+     glOrtho(0.0,res.w,res.h,0.0,1.0,-1.0);
      glClearColor(0.0f,0.0f,0.0f,0.0f);
      glEnable(GL_DEPTH_TEST);
      glDepthFunc(GL_LEQUAL); 
@@ -376,9 +408,7 @@ void l_splash_logo_init_scene() {
 }
 
 void l_splash_logo_render() {
-    static GLint T0     = 0;
-    static GLint Frames = 0;
-
+     l_splash_logo_init_scene();
      glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
      glMatrixMode(GL_MODELVIEW);
      glLoadIdentity();
@@ -436,8 +466,8 @@ void l_splash_logo_render() {
 
 }
 
-void l_splash_logo_init() {
-
+void l_splash_logo_init(void* params) {
+     SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"l_splash init");
     lambda_grid          = grid_list();
     lambda_polygons      = polygon_list();
     lambda_faces_quads   = faces_list(GL_QUADS);
@@ -446,16 +476,4 @@ void l_splash_logo_init() {
     lambda_text          = text_list();
     l_splash_logo_init_scene();
 
-    SDL_Event event;
-    for(;;) {
-        while(SDL_PollEvent(&event)) {
-          switch(event.type) {
-           case SDL_QUIT:
-             exit(0);
-           break;
-          }
-        }
-        l_splash_logo_update();
-        l_splash_logo_render();
-    }
 }

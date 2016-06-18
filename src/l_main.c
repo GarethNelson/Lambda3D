@@ -155,6 +155,8 @@ int main(int argc, char** argv) {
     float delta;
     set_cvar_f("fps",60);
     set_cvar_f("delta",16);
+
+    switch_appstage(APPSTAGE_STARTUP,APPSTAGE_SPLASH,APPFLAGS_NORMAL,APPFLAGS_NORMAL,NULL);
     while(running) {
        delta = t-last_frame;
        last_frame = t;

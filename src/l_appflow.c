@@ -35,6 +35,7 @@
 #include "l_appflow.h"
 #include "cons_cvars.h"
 #include "r_2d.h"
+#include "l_splash_logo.h"
 
 void default_init(void* params) {
      console_printf("Default init called for stage\n");
@@ -55,7 +56,7 @@ static unsigned int stage_count=0;
 
 static struct app_stage_t app_stages[] = {
   {APPSTAGE_STARTUP,   "Startup",         &default_init,&default_cleanup,&default_update,&default_render},
-  {APPSTAGE_SPLASH,    "Splash screen",   &default_init,&default_cleanup,&default_update,&default_render},
+  {APPSTAGE_SPLASH,    "Splash screen",   &l_splash_logo_init,&default_cleanup,&l_splash_logo_update,&l_splash_logo_render},
   {APPSTAGE_STARTMENU, "Start menu",      &default_init,&default_cleanup,&default_update,&default_render},
   {APPSTAGE_LOADSCREEN,"Loading screen",  &default_init,&default_cleanup,&default_update,&default_render},
   {APPSTAGE_INGAME,    "Ingame",          &default_init,&default_cleanup,&default_update,&default_render},
@@ -131,45 +132,25 @@ char* stage_name(int stage, int flags) {
 }
 
 void update_app(int stage, int flags) {
-     switch(stage) {
-        case APPSTAGE_STARTUP:
-        break;
-        
-        case APPSTAGE_SPLASH:
-        break;
-        
-        case APPSTAGE_STARTMENU:
-        break;
-        
-        case APPSTAGE_LOADSCREEN:
-        break;
-        
-        default:
-           SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,"Invalid app stage %d with flags %d",stage,flags);
-        break;
+     int i=0;
+     for(i=0; i < (sizeof(app_stage_table) / sizeof(struct app_stage_t)); i++) {
+         if(app_stage_table[i].stage_id==stage) {
+            app_stage_table[i].update();return;
+         }
      }
+
 }
 
 
 char debug_info[32];
 void render_app(int stage, int flags) {
-     switch(stage) {
-        case APPSTAGE_STARTUP:
-        break;
-        
-        case APPSTAGE_SPLASH:
-        break;
-        
-        case APPSTAGE_STARTMENU:
-        break;
-        
-        case APPSTAGE_LOADSCREEN:
-        break;
-        
-        default:
-           SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,"Invalid app stage %d with flags %d",stage,flags);
-        break;
+     int i=0;
+     for(i=0; i < (sizeof(app_stage_table) / sizeof(struct app_stage_t)); i++) {
+         if(app_stage_table[i].stage_id==stage) {
+            app_stage_table[i].update();break;
+         }
      }
+
      if((flags & APPFLAGS_DEBUG) != 0) {
        snprintf(debug_info,32,"FPS: %f, Delta: %f",get_cvar_f("fps"),get_cvar_f("delta"));
        draw_debug_text(debug_info,0,0);
