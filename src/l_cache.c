@@ -281,10 +281,16 @@ struct cache_context_t* cache_gl_texture(struct cache_context_t** ctx, char* fil
 
      HASH_ADD_STR(*ctx,filename,entry);
      SDL_LogVerbose(SDL_LOG_CATEGORY_SYSTEM,"Loaded %s into texture cache",filename);
-
+     return entry;
 }
 
 struct cache_context_t* cached_file(struct cache_context_t** ctx, char* filename) {
+     struct cache_context_t* entry=NULL;
+     HASH_FIND_STR(*ctx,filename,entry);
+     if(entry==NULL) {
+        entry = cache_vfs_file(ctx,filename);
+     }
+     return entry;
 }
 
 struct cache_context_t* cached_texture(struct cache_context_t** ctx, char* filename) {

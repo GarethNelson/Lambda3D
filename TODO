@@ -54,7 +54,8 @@ Key:
    Sound cache
 *  OpenGL texture cache - load OpenGL textures here
    Arbitary data cache - pass a pointer and a data size, whole thing copied into cache and stored
-  Splash / logo
+! Splash / logo
+   Integrate vector lambda animation with proper timestepping
   Loading screen
   Def format loader
   Level renderer
