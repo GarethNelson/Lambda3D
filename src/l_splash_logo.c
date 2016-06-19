@@ -40,6 +40,7 @@
 #endif
 
 #include "l_utils.h"
+#include "cons_cvars.h"
 #include <SDL.h>
 
 
@@ -50,8 +51,10 @@ int fade_out=0;
 float fade_alpha=0.0f;
 
 void l_splash_logo_update() {
-     yrot+=2.0f;
-     xrot-=1.0f;
+     float delta = get_cvar_f("delta")/1000.0f;
+     yrot+=100.0f*delta;
+     xrot-=50.0f*delta;
+     printf("%f %f %f\n",yrot,xrot,delta);
      if(yrot>360.0) yrot=0.0f;
      if(fade_out==0) {
         if(yrot>350.0) draw_text++;
@@ -59,7 +62,7 @@ void l_splash_logo_update() {
           fade_out=1;
         }
      } else {
-       fade_alpha += 0.01f;
+       fade_alpha += 1.0f*delta;
        if(fade_alpha >= 1.0f) {
           // switch stage here
        }
