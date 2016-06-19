@@ -50,7 +50,6 @@ int fade_out=0;
 float fade_alpha=0.0f;
 
 void l_splash_logo_update() {
-     SDL_Delay(10);
      yrot+=2.0f;
      xrot-=1.0f;
      if(yrot>360.0) yrot=0.0f;
