@@ -55,7 +55,6 @@ void l_splash_logo_update() {
      float delta = get_cvar_f("delta")/1000.0f;
      yrot+=100.0f*delta;
      xrot-=50.0f*delta;
-     printf("%f %f %f\n",yrot,xrot,delta);
      if(yrot>360.0) yrot=0.0f;
      if(fade_out==0) {
         if(yrot>350.0) draw_text++;
