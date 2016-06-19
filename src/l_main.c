@@ -41,6 +41,7 @@
 #include "r_2d.h"
 #include "cons_cvars.h"
 #include "oglconsole.h"
+#include "l_splash_logo.h"
 
 int running=1;
 
@@ -67,7 +68,7 @@ void handle_l_event(SDL_Event e) {
 void handle_events() {
      SDL_Event e;
      while (SDL_PollEvent(&e)) {
-            if (OGLCONSOLE_SDLEvent(&e) == 0) switch(e.type) {
+        if (OGLCONSOLE_SDLEvent(&e) == 0) switch(e.type) {
                case SDL_QUIT:
                  running = 0;
                break;
@@ -76,7 +77,7 @@ void handle_events() {
                      handle_l_event(e); // see l_event.h and l_event.c
                   }
                break;
-            }
+        }
      }
 }
 
@@ -121,6 +122,7 @@ int main(int argc, char** argv) {
     SDL_InitSubSystem(SDL_INIT_EVENTS);
  
     v_init();
+    
     console_init();
 
     if(PHYSFS_init(argv[0])==0) {
@@ -169,7 +171,6 @@ int main(int argc, char** argv) {
        v_pre_render();
 
        render_app(stage, flags);
-
        console_render();
 
        v_post_render();

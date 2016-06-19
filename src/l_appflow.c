@@ -72,6 +72,7 @@ void add_appstage(struct app_stage_t stage) {
 void init_appstage_table() {
      int i=0;
      for(i=0; i< (sizeof(app_stages)/sizeof(struct app_stage_t)); i++) {
+         SDL_LogInfo(SDL_LOG_CATEGORY_SYSTEM,"Adding stage: %s",app_stages[i].stage_name);
          add_appstage(app_stages[i]);
      }
 }
@@ -133,9 +134,9 @@ char* stage_name(int stage, int flags) {
 
 void update_app(int stage, int flags) {
      int i=0;
-     for(i=0; i < (sizeof(app_stage_table) / sizeof(struct app_stage_t)); i++) {
+     for(i=0; i < stage_count; i++) {
          if(app_stage_table[i].stage_id==stage) {
-            app_stage_table[i].update();return;
+            app_stage_table[i].update();
          }
      }
 
@@ -145,9 +146,9 @@ void update_app(int stage, int flags) {
 char debug_info[32];
 void render_app(int stage, int flags) {
      int i=0;
-     for(i=0; i < (sizeof(app_stage_table) / sizeof(struct app_stage_t)); i++) {
+     for(i=0; i < stage_count; i++) {
          if(app_stage_table[i].stage_id==stage) {
-            app_stage_table[i].update();break;
+            app_stage_table[i].render();
          }
      }
 

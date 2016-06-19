@@ -167,13 +167,13 @@ void console_init() {
 }
 
 void console_render() {
-     glMatrixMode(GL_PROJECTION);
+/*     glMatrixMode(GL_PROJECTION);
      glPushMatrix();
      screen_res res = get_screen_res();
      glOrtho( 0.0, res.w, res.h, 0.0, 1.0, -1.0 );
-     glViewport( 0, 0, ( GLsizei )res.w, ( GLsizei )res.h );
+     glViewport( 0, 0, ( GLsizei )res.w, ( GLsizei )res.h );*/
      OGLCONSOLE_Draw();
-     glPopMatrix();
+//     glPopMatrix();
 }
 
 

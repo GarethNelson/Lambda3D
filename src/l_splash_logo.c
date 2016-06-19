@@ -42,17 +42,15 @@
 #include "l_utils.h"
 #include <SDL.h>
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
-#define SCREEN_BPP 24
 
-static float yrot=0.0f;
-static float  xrot=90.0f;
-static int draw_text=0;
-static int fade_out=0;
-static float fade_alpha=0.0f;
+float yrot=0.0f;
+float  xrot=90.0f;
+int draw_text=0;
+int fade_out=0;
+float fade_alpha=0.0f;
 
 void l_splash_logo_update() {
+     SDL_Delay(10);
      yrot+=2.0f;
      xrot-=1.0f;
      if(yrot>360.0) yrot=0.0f;
@@ -63,34 +61,36 @@ void l_splash_logo_update() {
         }
      } else {
        fade_alpha += 0.01f;
-       if(fade_alpha >= 1.0f) exit(0);
+       if(fade_alpha >= 1.0f) {
+          // switch stage here
+       }
      }
 }
 
-static GLuint lambda_polygons=0;
-static GLuint lambda_outline=0;
-static GLuint lambda_faces_quads=0;
-static GLuint lambda_faces_lines=0;
-static GLuint lambda_grid=0;
-static GLuint lambda_text=0;
-
-static GLuint grid_list() {
+GLuint lambda_polygons=0;
+GLuint lambda_outline=0;
+GLuint lambda_faces_quads=0;
+GLuint lambda_faces_lines=0;
+GLuint lambda_grid=0;
+GLuint lambda_text=0;
+screen_res s_res;
+GLuint grid_list() {
        int i=0;
        GLuint retval=glGenLists(1);
        glNewList(retval,GL_COMPILE);
        glBegin(GL_LINES);
-       for(i=-5; i<30; i+=1) {
+       for(i=-5; i<50; i+=1) {
            glVertex2d(-5.0f,i);
-           glVertex2d(30.0f,i);
+           glVertex2d(50.0f,i);
            glVertex2d(i,-5.0f);
-           glVertex2d(i,30.0f);
+           glVertex2d(i,50.0f);
        }
        glEnd();
        glEndList();
        return retval;
 }
 
-static GLuint text_list() {
+GLuint text_list() {
        GLuint retval=glGenLists(1);
        glNewList(retval,GL_COMPILE);
        glBegin(GL_QUADS);
@@ -248,7 +248,7 @@ static GLuint text_list() {
        return retval;
 }
 
-static GLuint faces_list(GLuint mode) {
+GLuint faces_list(GLuint mode) {
        GLuint retval=glGenLists(1);
        glNewList(retval,GL_COMPILE);
        glBegin(mode);
@@ -317,7 +317,7 @@ static GLuint faces_list(GLuint mode) {
        return retval;
 }
 
-static GLuint outline_list() {
+GLuint outline_list() {
        GLuint retval=glGenLists(1);
        GLuint shape=glGenLists(1);
        glNewList(shape,GL_COMPILE);
@@ -347,7 +347,7 @@ static GLuint outline_list() {
      return retval;
 }
 
-static GLuint polygon_list() {
+GLuint polygon_list() {
        GLuint retval=glGenLists(1);
        glNewList(retval, GL_COMPILE);
        glBegin(GL_QUADS);
@@ -396,11 +396,11 @@ static GLuint polygon_list() {
 }
 
 
-static void l_splash_logo_init_scene() {
-       screen_res res = get_screen_res();
+void l_splash_logo_init_scene() {
+     s_res = get_screen_res();
      glMatrixMode(GL_PROJECTION);
      glLoadIdentity();
-     glOrtho(0.0,res.w,res.h,0.0,1.0,-1.0);
+     glOrtho(0.0,s_res.w,s_res.h,0.0,1.0,-1.0);
      glClearColor(0.0f,0.0f,0.0f,0.0f);
      glEnable(GL_DEPTH_TEST);
      glDepthFunc(GL_LEQUAL); 
@@ -408,16 +408,18 @@ static void l_splash_logo_init_scene() {
 }
 
 void l_splash_logo_render() {
-     l_splash_logo_init_scene();
+     glDisable(GL_TEXTURE_2D);
      glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
      glMatrixMode(GL_MODELVIEW);
+     glPushMatrix();
      glLoadIdentity();
 
      glTranslatef(100.0,50.0,0.0);
      glScaled(50,100,0);
-     
+
      glColor3d(1,1,1);
      if(draw_text==0) glCallList(lambda_grid);
+     glCallList(lambda_grid);
 
      if(draw_text>=1) {
         glColor3d(1,0,0);
@@ -455,14 +457,14 @@ void l_splash_logo_render() {
         glColor4f(0,0,0,fade_alpha);
         glBegin(GL_QUADS);
           glVertex2f(0.0f,0.0f);
-          glVertex2f(SCREEN_WIDTH,0.0f);
-          glVertex2f(SCREEN_WIDTH,SCREEN_HEIGHT);
-          glVertex2f(0.0f,SCREEN_HEIGHT);
+          glVertex2f(s_res.w,0.0f);
+          glVertex2f(s_res.w,s_res.h);
+          glVertex2f(0.0f,s_res.h);
         glEnd();
         glDisable(GL_BLEND);
      }
 
-
+     glPopMatrix();
 
 }
 
