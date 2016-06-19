@@ -83,10 +83,12 @@ void handle_events() {
 
 static char* mount_file=NULL; // file to mount supplied from command line
 static char* exe_name=NULL;
+static int start_in_debug=0;
 
 void print_usage() {
      fprintf(stderr,"usage: %s [-f filename] [-h]\n",exe_name);
      fprintf(stderr,"       -f mount an archive to the VFS root before starting the engine\n");
+     fprintf(stderr,"       -d start in debug mode\n");
      fprintf(stderr,"       -h show this usage information\n");
 }
 
@@ -97,10 +99,13 @@ void handle_opts(int argc, char** argv) {
 
      exe_name = strdup(argv[0]);
 
-     while((c = getopt(argc, argv, "f:h")) != -1) {
+     while((c = getopt(argc, argv, "f:dh")) != -1) {
          switch(c) {
              case 'f':
                 mount_file = strdup(optarg);
+             break;
+             case 'd':
+                start_in_debug=1;
              break;
              case 'h':
                 print_usage();
@@ -125,6 +130,7 @@ int main(int argc, char** argv) {
     
     console_init();
 
+
     if(PHYSFS_init(argv[0])==0) {
        SDL_LogError(SDL_LOG_CATEGORY_SYSTEM,"Could not setup PhysFS - VFS will not be operational!");
        exit(1);
@@ -142,7 +148,11 @@ int main(int argc, char** argv) {
     init_cache();
     init_appstage_table();
 
-    switch_appstage(0,APPSTAGE_STARTUP,0,APPFLAGS_NORMAL,NULL);
+    if(start_in_debug==1) {
+       switch_appstage(0,APPSTAGE_STARTUP,0,APPFLAGS_DEBUG,NULL);
+    } else {
+       switch_appstage(0,APPSTAGE_STARTUP,0,APPFLAGS_NORMAL,NULL);
+    }
     set_cvar_s("cwd","/");
 
     console_runscript("/autoexec.cfg");
@@ -158,7 +168,7 @@ int main(int argc, char** argv) {
     set_cvar_f("fps",60);
     set_cvar_f("delta",16);
 
-    switch_appstage(APPSTAGE_STARTUP,APPSTAGE_SPLASH,APPFLAGS_NORMAL,APPFLAGS_NORMAL,NULL);
+    switch_appstage(APPSTAGE_STARTUP,APPSTAGE_SPLASH,get_cvar_i("appflags"),get_cvar_i("appflags"),NULL);
     while(running) {
        delta = t-last_frame;
        last_frame = t;
