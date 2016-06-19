@@ -55,7 +55,8 @@ Key:
 *  OpenGL texture cache - load OpenGL textures here
    Arbitary data cache - pass a pointer and a data size, whole thing copied into cache and stored
 ! Splash / logo
-   Integrate vector lambda animation with proper timestepping
+*  Basic 3D logo and fade out
+   Add "powered by" text - dependent on TTF
   Loading screen
   Def format loader
   Level renderer

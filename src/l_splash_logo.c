@@ -79,10 +79,10 @@ GLuint grid_list() {
        GLuint retval=glGenLists(1);
        glNewList(retval,GL_COMPILE);
        glBegin(GL_LINES);
-       for(i=-5; i<50; i+=1) {
-           glVertex2d(-5.0f,i);
+       for(i=-20; i<50; i+=1) {
+           glVertex2d(-20.0f,i);
            glVertex2d(50.0f,i);
-           glVertex2d(i,-5.0f);
+           glVertex2d(i,-20.0f);
            glVertex2d(i,50.0f);
        }
        glEnd();
@@ -414,12 +414,11 @@ void l_splash_logo_render() {
      glPushMatrix();
      glLoadIdentity();
 
-     glTranslatef(100.0,50.0,0.0);
+     glTranslatef((s_res.w/2)-600.0,(s_res.h/2)-300.0,0.0);
      glScaled(50,100,0);
 
      glColor3d(1,1,1);
      if(draw_text==0) glCallList(lambda_grid);
-     glCallList(lambda_grid);
 
      if(draw_text>=1) {
         glColor3d(1,0,0);
