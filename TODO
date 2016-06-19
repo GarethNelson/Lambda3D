@@ -64,6 +64,7 @@ Key:
    Build display list for whole level geometery
   Test level
   Menu system
+   Menu stage params: NULL for main menu, otherwise particular menu state
    Define via .def file
    TTF font
    Menu items can trigger console commands
