@@ -41,8 +41,9 @@
 
 #include "l_utils.h"
 #include "cons_cvars.h"
+#include "l_events.h"
+#include "l_appflow.h"
 #include <SDL.h>
-
 
 float yrot=0.0f;
 float  xrot=90.0f;
@@ -64,7 +65,12 @@ void l_splash_logo_update() {
      } else {
        fade_alpha += 1.0f*delta;
        if(fade_alpha >= 1.0f) {
-          // switch stage here
+          l_ev_switch_req *req = malloc(sizeof(l_ev_switch_req));
+          req->new_stage        = APPSTAGE_STARTMENU;
+          req->set_flags        = 0;
+          req->unset_flags      = 0;
+          req->new_stage_params = NULL;
+          ev_send(L_EV_SWITCH_REQ,req);
        }
      }
 }
